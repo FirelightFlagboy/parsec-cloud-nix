@@ -57,63 +57,48 @@
             # preferWheels = true;
             checkGroups = [ "test" ];
             python = pkgs.python39;
-            nativeBuildInputs = [ pkgs.qt5.wrapQtAppsHook pkgs.patchelf ];
+            nativeBuildInputs = [
+              pkgs.qt5.wrapQtAppsHook
+
+              # Required to build rust binding
+              pkgs.patchelf
+              pkgs.maturin
+              pkgs.cargo
+              pkgs.rustc
+              pkgs.rustPlatform.cargoSetupHook
+
+              # Needed to build openssl-src
+              pkgs.buildPackages.perl
+            ];
+
+            cargoDeps = pkgs.rustPlatform.importCargoLock {
+              lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
+            };
 
             overrides = poetry2nix.overrides.withDefaults
               (self: super: {
                 pywin32 = null;
-                patchelf = null;
-                # patchelf = super.patchelf.overridePythonAttrs (old: {
-                #   nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.cmake ];
-                #   buildInputs = old.buildInputs ++ [ super.setuptools super.setuptools-scm super.scikit-build ];
-                # });
+                # patchelf = null;
+                patchelf = super.patchelf.overridePythonAttrs (old: {
+                  # format = "wheel";
+                  nativeBuildInputs = old.nativeBuildInputs ++ [
+                    # pkgs.cmake
+                    self.cmake
+                    pkgs.buildPackages.pkg-config
+                    pkgs.buildPackages.cmake
+                    pkgs.buildPackages.autoconf
+                    pkgs.buildPackages.automake
+                  ];
+                  buildInputs = old.buildInputs ++ [
+                    super.setuptools
+                    super.setuptools-scm
+                    super.scikit-build
+                  ];
+                  buildPhase = ''
+                    ${super.python}/bin/python3 -m pip wheel --verbose --no-index --no-deps --no-clean --no-build-isolation --wheel-dir dist ..
+                  '';
+                });
                 winfspy = null;
-                # pyinstaller = null;
-                # editorconfig-checker = null;
-                # pyqt5-stubs = null;
-                # poetry-lock-package = null;
-                # cibuildwheel = null;
-
-                # mypy = super.mypy.overridePythonAttrs
-                #   (old: {
-                #     # preferWheels = true;
-                #     # version = "0.991";
-                #     # buildInputs = old.buildInputs ++ [ super.setuptools ];
-                #     # src = pkgs.fetchzip
-                #     #   {
-                #     #     url = "https://files.pythonhosted.org/packages/0e/5c/fbe112ca73d4c6a9e65336f48099c60800514d8949b4129c093a84a28dc8/mypy-0.991.tar.gz";
-                #     #     hash = "sha256-3cF5Ws3xrkruJ5D26lCwbTdW7MWH1oZfL68Kd92zxE0=";
-                #     #   };
-                #     # patches = [ ];
-                #     # MYPY_USE_MYPYC = false;
-                #     src = pkgs.fetchPypi {
-                #       inherit (old) pname version;
-                #       python = "py3";
-                #       dist = "py3";
-                #       sha256 = "sha256-ECHCQei24cpaR+TVJgEnSsB4qJhFz95mxtX3aYGf+h0=";
-                #       format = "wheel";
-                #     };
-                #     format = "wheel";
-                #     # pipBuildPhase = ''
-                #     #   echo Foobar
-                #     #   exit 1'';
-                #     buildPhase = ''
-                #       echo  build phase
-                #       set -x
-                #       ls -Rl
-                #       pwd
-                #     '';
-                #   });
-
-                # # The version of ruff used by parsec-cloud is too old for poetry2nix (version not listed)
-                # ruff = super.ruff.overridePythonAttrs (old: {
-                #   version = "0.1.12";
-                # });
-
-                # # Poetry2Nix don't have the version `39.0.1` of cryptography
-                # cryptography = super.cryptography.overridePythonAttrs (old: {
-                #   version = "39.0.2";
-                # });
 
                 async-exit-stack = super.async-exit-stack.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools ];
@@ -134,9 +119,6 @@
                   buildInputs = old.buildInputs ++ [ super.setuptools ];
                 });
 
-                # hypothesis-trio = super.hypothesis-trio.overridePythonAttrs (old: {
-                #   buildInputs = old.buildInputs ++ [ super.setuptools ];
-                # });
                 qtrio = super.qtrio.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools ];
                 });

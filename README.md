@@ -12,3 +12,4 @@ https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/python.sec
 https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/fetchpypi/default.nix
 https://nixos.wiki/wiki/Packaging/Python
 https://github.com/NixOS/nixpkgs/blob/master/pkgs/README.md#patches
+https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/rust.section.md
