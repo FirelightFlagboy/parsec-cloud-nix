@@ -75,15 +75,17 @@
               lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
             };
 
+            makeWrapperArgs = [
+              "--set FUSE_LIBRARY_PATH ${pkgs.fuse}/lib/libfuse.so.${pkgs.fuse.version}"
+            ];
+
             overrides = poetry2nix.overrides.withDefaults
               (self: super: {
                 pywin32 = null;
-                # patchelf = null;
+                winfspy = null;
+
                 patchelf = super.patchelf.overridePythonAttrs (old: {
-                  # format = "wheel";
                   nativeBuildInputs = old.nativeBuildInputs ++ [
-                    # pkgs.cmake
-                    self.cmake
                     pkgs.buildPackages.pkg-config
                     pkgs.buildPackages.cmake
                     pkgs.buildPackages.autoconf
@@ -98,7 +100,6 @@
                     ${super.python}/bin/python3 -m pip wheel --verbose --no-index --no-deps --no-clean --no-build-isolation --wheel-dir dist ..
                   '';
                 });
-                winfspy = null;
 
                 async-exit-stack = super.async-exit-stack.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools ];

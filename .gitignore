@@ -2,3 +2,5 @@
 /outputs
 /result
 /parsec-cloud-src-patched
+/.cargo
+/cargo-vendor-dir

@@ -13,3 +13,9 @@ https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/fetchpypi/defaul
 https://nixos.wiki/wiki/Packaging/Python
 https://github.com/NixOS/nixpkgs/blob/master/pkgs/README.md#patches
 https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/rust.section.md
+https://nixos.org/manual/nixpkgs/stable/#chap-hooks
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/stdenv/generic/make-derivation.nix
+https://nixos.org/manual/nixpkgs/stable/#chap-stdenv
+https://stackoverflow.com/questions/68329265/how-to-specify-package-derivation-runtime-dependencies-with-nix
+https://nixos.org/manual/nixpkgs/stable/#fun-wrapProgram
+https://nixos.org/manual/nixpkgs/stable/#fun-makeWrapper
