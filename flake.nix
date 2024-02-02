@@ -75,8 +75,10 @@
               lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
             };
 
-            makeWrapperArgs = [
-              "--set FUSE_LIBRARY_PATH ${pkgs.fuse}/lib/libfuse.so.${pkgs.fuse.version}"
+            makeWrapperArgs = with pkgs; [
+              "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
+              # TODO: find a way to make this work join plugin of qtbase + qtwayland
+              "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
             ];
 
             overrides = poetry2nix.overrides.withDefaults
