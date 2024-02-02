@@ -57,6 +57,7 @@
             # preferWheels = true;
             checkGroups = [ "test" ];
             python = pkgs.python39;
+
             nativeBuildInputs = [
               pkgs.qt5.wrapQtAppsHook
 
@@ -78,7 +79,9 @@
             makeWrapperArgs = with pkgs; [
               "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
               # TODO: find a way to make this work join plugin of qtbase + qtwayland
-              "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
+              # "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
+              "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms"
+              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland}/lib"
             ];
 
             overrides = poetry2nix.overrides.withDefaults

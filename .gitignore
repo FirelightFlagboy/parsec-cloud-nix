@@ -4,3 +4,4 @@
 /parsec-cloud-src-patched
 /.cargo
 /cargo-vendor-dir
+/straces
