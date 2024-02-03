@@ -135,12 +135,16 @@
 
                 qtrio = super.qtrio.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools ];
+
+                  extras = [ "pyqt5" ];
                 });
                 toastedmarshmallow = super.toastedmarshmallow.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools ];
                 });
                 qts = super.qts.overridePythonAttrs (old: {
                   buildInputs = old.buildInputs ++ [ super.setuptools super.versioneer ];
+
+                  extras = [ "pyqt5" ];
                 });
               });
           };
