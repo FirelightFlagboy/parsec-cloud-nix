@@ -87,7 +87,7 @@
               # "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
               # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms"
               # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland}/lib"
-              "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland.bin}/lib/${qt5.qtwayland.version}/plugins/platforms"
+              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland.bin}/lib/qt-${qt5.qtwayland.version}/plugins/platforms"
             ];
 
             overrides = poetry2nix.overrides.withDefaults
