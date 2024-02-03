@@ -67,10 +67,13 @@
               pkgs.cargo
               pkgs.rustc
               pkgs.rustPlatform.cargoSetupHook
+              pkgs.qt5.qttools
 
               # Needed to build openssl-src
               pkgs.buildPackages.perl
             ];
+
+            propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland ];
 
             cargoDeps = pkgs.rustPlatform.importCargoLock {
               lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
@@ -78,16 +81,21 @@
 
             makeWrapperArgs = with pkgs; [
               "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
+              "--prefix LD_LIBRARY_PATH : ${pkgs.qt5.qtbase}/lib"
+              "--prefix LD_LIBRARY_PATH : ${pkgs.qt5.qtwayland}/lib"
               # TODO: find a way to make this work join plugin of qtbase + qtwayland
               # "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
-              "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms"
+              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms"
               # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland}/lib"
+              "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland.bin}/lib/${qt5.qtwayland.version}/plugins/platforms"
             ];
 
             overrides = poetry2nix.overrides.withDefaults
               (self: super: {
                 pywin32 = null;
                 winfspy = null;
+
+                # pyqt5-sip = pkgs.python39Packages.pyqt5_sip;
 
                 patchelf = super.patchelf.overridePythonAttrs (old: {
                   nativeBuildInputs = old.nativeBuildInputs ++ [

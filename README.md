@@ -7,6 +7,7 @@ Packaging parsec-cloud in NixOS
 - [Poetry2Nix](https://github.com/nix-community/poetry2nix)
 - [Parsec-cloud - poetry.lock](https://github.com/Scille/parsec-cloud/blob/v2.16.3/poetry.lock)
 - [Poetry2Nix - mypy](https://github.com/nix-community/poetry2nix/issues/561)
+- [NixOS QT Wiki](https://nixos.wiki/wiki/Qt)
 https://ryantm.github.io/nixpkgs/languages-frameworks/rust/#python-package-using-maturin
 https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/python.section.md
 https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/fetchpypi/default.nix
