@@ -60,6 +60,7 @@
 
             nativeBuildInputs = [
               pkgs.qt5.wrapQtAppsHook
+              pkgs.wrapGAppsHook
 
               # Required to build rust binding
               pkgs.patchelf
@@ -73,21 +74,21 @@
               pkgs.buildPackages.perl
             ];
 
-            propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland ];
+            propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland pkgs.gtk3 ];
 
             cargoDeps = pkgs.rustPlatform.importCargoLock {
               lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
             };
 
+            dontWrapQtApps = true;
+            dontWrapGApps = true;
+
             makeWrapperArgs = with pkgs; [
+              "\${qtWrapperArgs[@]}"
+              "\${gappsWrapperArgs[@]}"
               "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
-              "--prefix LD_LIBRARY_PATH : ${pkgs.qt5.qtbase}/lib"
-              "--prefix LD_LIBRARY_PATH : ${pkgs.qt5.qtwayland}/lib"
-              # TODO: find a way to make this work join plugin of qtbase + qtwayland
-              # "--set QT_QPA_PLATFORM_PLUGIN_PATH '${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms ${qt5.qtwayland}/lib'"
-              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtbase}/lib/qt-${qt5.qtbase.version}/plugins/platforms"
-              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland}/lib"
-              # "--set QT_QPA_PLATFORM_PLUGIN_PATH ${qt5.qtwayland.bin}/lib/qt-${qt5.qtwayland.version}/plugins/platforms"
+              "--prefix LD_LIBRARY_PATH : ${qt5.qtbase}/lib"
+              "--prefix LD_LIBRARY_PATH : ${qt5.qtwayland}/lib"
             ];
 
             overrides = poetry2nix.overrides.withDefaults
