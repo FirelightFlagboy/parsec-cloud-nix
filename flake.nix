@@ -34,7 +34,7 @@
 
       parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
       parsec-cloud-client = import packages/parsec-cloud-client {
-        inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version;
+        inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
       };
     in
     {

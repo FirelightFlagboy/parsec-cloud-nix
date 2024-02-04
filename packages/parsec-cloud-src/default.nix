@@ -25,6 +25,7 @@ pkgs.stdenv.mkDerivation {
   '';
   dontFixup = true;
   meta = with pkgs.lib; {
+    homepage = "https://parsec.cloud/";
     description = "Open source Dropbox-like file sharing with full client encryption !";
     branch = "releases/${majorMinor parsec-cloud-version}";
     license = with licenses; [ agpl3Only bsl11 ];

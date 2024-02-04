@@ -1,4 +1,4 @@
-{ poetry2nix, parsec-cloud-src, pkgs, ... }:
+{ poetry2nix, parsec-cloud-src, pkgs, system, ... }:
 
 poetry2nix.mkPoetryApplication
 {
@@ -104,4 +104,9 @@ poetry2nix.mkPoetryApplication
         extras = [ "pyqt5" ];
       });
     });
+
+  meta = parsec-cloud-src.meta // {
+    platforms = [ system ];
+  };
+
 }
