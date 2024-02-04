@@ -1,0 +1,15 @@
+docs history use local `HISTORY` without traversing folders
+
+# --- >4 ---
+diff --git a/docs/history.rst b/docs/history.rst
+index f5285bc0f..9606e7c26 100644
+--- a/docs/history.rst
++++ b/docs/history.rst
+@@ -2,4 +2,4 @@
+
+ .. _doc_history:
+
+-.. include:: ../HISTORY.rst
++.. include:: ./HISTORY.rst
+--
+2.42.0

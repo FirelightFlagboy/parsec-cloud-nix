@@ -15,6 +15,8 @@
 
       pkgs = import nixpkgs {
         inherit system;
+
+        config.allowUnfree = true;
       };
 
       poetry2nix = import inputs.poetry2nix {
@@ -23,36 +25,24 @@
 
       parsec-cloud-version = "2.16.3";
 
-      parsec-cloud-src = pkgs.fetchFromGitHub {
+      parsec-cloud-raw-src = pkgs.fetchFromGitHub {
         owner = "Scille";
         repo = "parsec-cloud";
         rev = "v${parsec-cloud-version}";
         sha256 = "1ygkccny40sb2b7klia107z14zdfxhl07aagl51zx4ywpys2l8az";
       };
 
-      parsec-cloud-src-patched = pkgs.stdenv.mkDerivation {
-        name = "parsec-cloud-src-patched";
-        version = parsec-cloud-version;
-        src = parsec-cloud-src;
-        patches = [ patches/parsec-cloud-poetry-deps.patch ];
-        patchFlags = "--strip=1 --verbose";
-        # phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
-        # buildPhase = ''echo ">>>>>>>>>>> buildPhase"'';
-        installPhase = ''
-          mkdir -p $out
-          cp -r $src/* $out
-        '';
-      };
+      parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
     in
     {
       formatter.${system} = pkgs.nixpkgs-fmt;
 
       packages.${system} = {
-        inherit parsec-cloud-src-patched;
+        inherit parsec-cloud-src;
 
         parsec-cloud-client = poetry2nix.mkPoetryApplication
           {
-            projectDir = parsec-cloud-src-patched;
+            projectDir = parsec-cloud-src;
             extras = [ "core" ];
             # preferWheels = true;
             checkGroups = [ "test" ];
@@ -77,7 +67,7 @@
             propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland pkgs.gtk3 ];
 
             cargoDeps = pkgs.rustPlatform.importCargoLock {
-              lockFile = "${parsec-cloud-src-patched}/Cargo.lock";
+              lockFile = "${parsec-cloud-src}/Cargo.lock";
             };
 
             dontWrapQtApps = true;
