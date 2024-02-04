@@ -41,17 +41,16 @@
         rev = "v${parsec-cloud-version}";
         sha256 = "1ygkccny40sb2b7klia107z14zdfxhl07aagl51zx4ywpys2l8az";
       };
-
-      parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
-      parsec-cloud-client = import packages/parsec-cloud-client {
-        inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
-      };
     in
     {
       formatter.${ system} = pkgs.nixpkgs-fmt;
 
-      packages.${system} = {
-        inherit parsec-cloud-src parsec-cloud-client;
+      packages.${system} = rec {
+        parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
+        parsec-cloud-client = import packages/parsec-cloud-client {
+          inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
+        };
+      };
       };
 
       devShells.${system}.default = with pkgs; mkShell {
