@@ -16,7 +16,17 @@
       pkgs = import nixpkgs {
         inherit system;
 
-        config.allowUnfree = true;
+        config = {
+          allowUnfree = true;
+          builders-use-substitutes = true;
+          substituters = [
+            "https://parsec-cloud.cachix.org"
+            "https://cache.nixos.org"
+          ];
+          trusted-public-keys = [
+            "parsec-cloud.cachix.org-1:MuWfCBKBfuUWqwB6xKFK0armIJ+A+Mi++HohuB6YvTk="
+          ];
+        };
       };
 
       poetry2nix = import inputs.poetry2nix {
