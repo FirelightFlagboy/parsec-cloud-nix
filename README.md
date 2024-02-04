@@ -30,3 +30,9 @@ Packaging parsec-cloud in NixOS
   - [`makeWrapper`](https://nixos.org/manual/nixpkgs/stable/#fun-makeWrapper)
   - [Meta attrs (`pkgs.{pkgs}.meta`)](https://nixos.org/manual/nixpkgs/stable/#sec-standard-meta-attributes)
   - [Nixpks patches](https://github.com/NixOS/nixpkgs/blob/master/pkgs/README.md#patches)
+  - [`makeDesktopItem`](https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/make-desktopitem/default.nix)
+
+- Home manager module:
+  - [`Anyrun` module](https://github.com/Kirottu/anyrun/blob/master/nix/hm-module.nix)
+  - [`Nixos` module wiki](https://nixos.wiki/wiki/NixOS_modules)
+  - [Writing home manager modules](https://nix-community.github.io/home-manager/index.xhtml#ch-writing-modules)

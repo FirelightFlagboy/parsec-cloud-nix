@@ -51,6 +51,10 @@
           inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
         };
       };
+
+      homeManagerModules = rec {
+        parsec-cloud = import ./home-manager-module.nix inputs.self;
+        default = parsec-cloud;
       };
 
       devShells.${system}.default = with pkgs; mkShell {
