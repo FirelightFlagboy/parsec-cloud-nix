@@ -1,0 +1,32 @@
+name: "Build parsec-cloud"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: parsec-cloud
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Patch parsec-cloud source
+        run: nix build .#parsec-cloud-src
+
+      - name: Build parsec-cloud client
+        run: nix build .#parsec-cloud-client
+
+      - name: Check flake
+        run: nix flake check
