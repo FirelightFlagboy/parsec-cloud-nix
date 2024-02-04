@@ -87,8 +87,6 @@
               "\${qtWrapperArgs[@]}"
               "\${gappsWrapperArgs[@]}"
               "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
-              "--prefix LD_LIBRARY_PATH : ${qt5.qtbase}/lib"
-              "--prefix LD_LIBRARY_PATH : ${qt5.qtwayland}/lib"
             ];
 
             overrides = poetry2nix.overrides.withDefaults
