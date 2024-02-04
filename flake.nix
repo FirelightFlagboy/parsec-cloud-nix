@@ -33,110 +33,15 @@
       };
 
       parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
+      parsec-cloud-client = import packages/parsec-cloud-client {
+        inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version;
+      };
     in
     {
-      formatter.${system} = pkgs.nixpkgs-fmt;
+      formatter.${ system} = pkgs.nixpkgs-fmt;
 
       packages.${system} = {
-        inherit parsec-cloud-src;
-
-        parsec-cloud-client = poetry2nix.mkPoetryApplication
-          {
-            projectDir = parsec-cloud-src;
-            extras = [ "core" ];
-            # preferWheels = true;
-            checkGroups = [ "test" ];
-            python = pkgs.python39;
-
-            nativeBuildInputs = [
-              pkgs.qt5.wrapQtAppsHook
-              pkgs.wrapGAppsHook
-
-              # Required to build rust binding
-              pkgs.patchelf
-              pkgs.maturin
-              pkgs.cargo
-              pkgs.rustc
-              pkgs.rustPlatform.cargoSetupHook
-              pkgs.qt5.qttools
-
-              # Needed to build openssl-src
-              pkgs.buildPackages.perl
-            ];
-
-            propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland pkgs.gtk3 ];
-
-            cargoDeps = pkgs.rustPlatform.importCargoLock {
-              lockFile = "${parsec-cloud-src}/Cargo.lock";
-            };
-
-            dontWrapQtApps = true;
-            dontWrapGApps = true;
-
-            makeWrapperArgs = with pkgs; [
-              "\${qtWrapperArgs[@]}"
-              "\${gappsWrapperArgs[@]}"
-              "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"
-            ];
-
-            overrides = poetry2nix.overrides.withDefaults
-              (self: super: {
-                pywin32 = null;
-                winfspy = null;
-
-                # pyqt5-sip = pkgs.python39Packages.pyqt5_sip;
-
-                patchelf = super.patchelf.overridePythonAttrs (old: {
-                  nativeBuildInputs = old.nativeBuildInputs ++ [
-                    pkgs.buildPackages.pkg-config
-                    pkgs.buildPackages.cmake
-                    pkgs.buildPackages.autoconf
-                    pkgs.buildPackages.automake
-                  ];
-                  buildInputs = old.buildInputs ++ [
-                    super.setuptools
-                    super.setuptools-scm
-                    super.scikit-build
-                  ];
-                  buildPhase = ''
-                    ${super.python}/bin/python3 -m pip wheel --verbose --no-index --no-deps --no-clean --no-build-isolation --wheel-dir dist ..
-                  '';
-                });
-
-                async-exit-stack = super.async-exit-stack.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools ];
-                });
-                dukpy = super.dukpy.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools ];
-                });
-                maturin = super.maturin.overridePythonAttrs (old: {
-                  nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.rustc pkgs.cargo pkgs.rustPlatform.cargoSetupHook ];
-                  buildInputs = old.buildInputs ++ [ super.setuptools-rust ];
-                  cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
-                    inherit (old) src;
-                    name = "${old.pname}-${old.version}";
-                    hash = "sha256-LpXH0q4XhFAfXXdiww3TjRF6RQlLf6DKIpAhmp0j3os=";
-                  };
-                });
-                trio-typing = super.trio-typing.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools ];
-                });
-
-                qtrio = super.qtrio.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools ];
-
-                  extras = [ "pyqt5" ];
-                });
-                toastedmarshmallow = super.toastedmarshmallow.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools ];
-                });
-                qts = super.qts.overridePythonAttrs (old: {
-                  buildInputs = old.buildInputs ++ [ super.setuptools super.versioneer ];
-
-                  extras = [ "pyqt5" ];
-                });
-              });
-          };
+        inherit parsec-cloud-src parsec-cloud-client;
       };
 
       devShells.${system}.default = with pkgs; mkShell {
