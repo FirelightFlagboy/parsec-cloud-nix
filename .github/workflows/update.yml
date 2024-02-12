@@ -1,0 +1,49 @@
+name: Update flake lock
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 1'
+
+concurrency:
+  group: parsec-cloud-update
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Config git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Switch to update branch
+        run: git switch --create update-flake-lock origin/main
+
+      - name: Update flake lock
+        run: nix flake update --commit-lock-file
+
+      - name: Compare changes
+        id: compare
+        run: git diff --exit-code origin/main
+        continue-on-error: true
+
+      - name: Create pull request
+        if: steps.compare.outcome == 'failure'
+        run: |
+          git push origin update-flake-lock
+          gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
