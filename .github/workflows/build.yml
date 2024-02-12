@@ -3,6 +3,7 @@ name: "Build parsec-cloud"
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: parsec-cloud-build
