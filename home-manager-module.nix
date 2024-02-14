@@ -102,6 +102,7 @@ in
         preferred_org_creation_backend_addr = cfgClient.preferredServer;
         data_base_dir = cfgClient.dataBaseDir;
         gui_check_version_at_startup = cfgClient.checkForUpdate;
+        gui_first_launch = cfgClient.firstLaunchMessage;
       };
 
       # TODO: Add icon
