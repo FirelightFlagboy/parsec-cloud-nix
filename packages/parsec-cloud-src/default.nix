@@ -5,7 +5,7 @@ pkgs.stdenv.mkDerivation {
   version = parsec-cloud-version;
   src = parsec-cloud-raw-src;
   outputs = [ "out" "doc" ];
-  patches = [ ./parsec-cloud-poetry-deps.patch ./docs-use-local-HISTORY.patch ];
+  patches = [ ./0001-Rework-poetry-dependencies-and-group.patch ./0002-docs-use-local-HISTORY.patch ];
   configurePhase = ''
     rm -rf windows-icon-handler packaging newsfragment json_schema .github .cspell
   '';
