@@ -33,13 +33,13 @@
         inherit pkgs;
       };
 
-      parsec-cloud-version = "2.16.3";
+      parsec-cloud-version = "2.17.0";
 
       parsec-cloud-raw-src = pkgs.fetchFromGitHub {
         owner = "Scille";
         repo = "parsec-cloud";
         rev = "v${parsec-cloud-version}";
-        sha256 = "1ygkccny40sb2b7klia107z14zdfxhl07aagl51zx4ywpys2l8az";
+        sha256 = "1qaip52mmgfw6fqzrblzgxf4bbj19c5xl5carcn00q9a36y2mpvc";
       };
     in
     {

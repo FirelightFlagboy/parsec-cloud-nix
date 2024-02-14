@@ -45,10 +45,6 @@ poetry2nix.mkPoetryApplication
       pywin32 = null;
       winfspy = null;
 
-      cryptography = super.cryptography.overridePythonAttrs (old: {
-        version = "39.0.2";
-      });
-
       patchelf = super.patchelf.overridePythonAttrs (old: {
         nativeBuildInputs = old.nativeBuildInputs ++ [
           pkgs.buildPackages.pkg-config
