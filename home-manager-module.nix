@@ -110,7 +110,7 @@ in
         [Desktop Entry]
         Name=Parsec
         Comment=Secure cloud framework
-        Exec=${client} core gui %u
+        Exec=${client}/bin/parsec core gui %u
         Terminal=false
         Type=Application
         Categories=Network;FileTransfer;Security;
