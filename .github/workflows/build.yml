@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: parsec-cloud-build
+  group: parsec-cloud-build-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
