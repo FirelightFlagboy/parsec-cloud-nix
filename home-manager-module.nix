@@ -2,6 +2,7 @@ self: { lib, pkgs, config, ... }:
 
 let
   clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-client;
+  srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-src;
 in
 {
   options.programs.parsec-cloud-client = with lib; {
@@ -291,6 +292,7 @@ in
         Name=Parsec
         Comment=Secure cloud framework
         Exec=${client}/bin/parsec core gui %u
+        Icon=${srcPackage.icons}/parsec.png
         Terminal=false
         Type=Application
         Categories=Network;FileTransfer;Security;
