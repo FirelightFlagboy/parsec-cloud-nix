@@ -4,7 +4,7 @@ pkgs.stdenv.mkDerivation {
   name = "parsec-cloud-src";
   version = parsec-cloud-version;
   src = parsec-cloud-raw-src;
-  outputs = [ "out" "doc" ];
+  outputs = [ "out" "doc" "icons" ];
   patches = [
     ./0001-Rework-poetry-dependencies-and-group.patch
     ./0002-Use-local-history-file-in-docs.patch
@@ -12,6 +12,11 @@ pkgs.stdenv.mkDerivation {
     ./0004-Normalize-the-config-loading.patch
   ];
   configurePhase = ''
+    mkdir -p icons
+
+    cp parsec/core/gui/rc/images/icons/parsec.png icons/parsec.png
+    cp packaging/windows/icon.ico icons/parsec.ico
+
     rm -rf windows-icon-handler packaging newsfragment json_schema .github .cspell
   '';
   dontBuild = true;
@@ -27,6 +32,7 @@ pkgs.stdenv.mkDerivation {
       pyproject.toml poetry.lock build.py make.py \
       README.rst HISTORY.rst \
       "$out"
+    cp -r icons "$icons"
   '';
   dontFixup = true;
   meta = with pkgs.lib; {
