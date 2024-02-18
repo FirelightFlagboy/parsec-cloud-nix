@@ -5,7 +5,12 @@ pkgs.stdenv.mkDerivation {
   version = parsec-cloud-version;
   src = parsec-cloud-raw-src;
   outputs = [ "out" "doc" ];
-  patches = [ ./0001-Rework-poetry-dependencies-and-group.patch ./0002-docs-use-local-HISTORY.patch ];
+  patches = [
+    ./0001-Rework-poetry-dependencies-and-group.patch
+    ./0002-Use-local-history-file-in-docs.patch
+    ./0003-Fix-mountpoint_base_dir-not-a-Path.patch
+    ./0004-Normalize-the-config-loading.patch
+  ];
   configurePhase = ''
     rm -rf windows-icon-handler packaging newsfragment json_schema .github .cspell
   '';
