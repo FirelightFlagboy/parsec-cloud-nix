@@ -43,7 +43,10 @@ jobs:
       - name: Create pull request
         if: steps.compare.outcome == 'failure'
         run: |
-          git push origin update-flake-lock
-          gh pr create --fill
+          git push origin update-flake-lock --force
+          if ! gh pr list --head update-flake-lock | grep -i open; then
+            echo "No open PR for branch update-flake-lock, creating it..."
+            gh pr create --fill
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
