@@ -67,8 +67,10 @@
         };
 
       homeManagerModules = rec {
-        parsec-cloud = import ./home-manager-module.nix inputs.self;
-        default = parsec-cloud;
+        parsec-cloud = {
+          v2 = import packages/v2/home-manager-module.nix inputs.self;
+        };
+        default = parsec-cloud.v2;
       };
 
       devShells.${system}.default = with pkgs; mkShell {
