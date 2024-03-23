@@ -19,7 +19,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-v2:
+    name: "Build parsec-cloud v2"
     runs-on: ubuntu-22.04
     timeout-minutes: 120
     steps:
