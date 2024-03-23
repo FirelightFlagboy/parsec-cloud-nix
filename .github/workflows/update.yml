@@ -1,9 +1,12 @@
 name: Update flake lock
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/update.yml
   workflow_dispatch:
   schedule:
-    - cron: '0 5 * * 1'
+    - cron: "0 5 * * 1"
 
 concurrency:
   group: parsec-cloud-update
@@ -15,9 +18,15 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      commit_sha: ${{ steps.commit.outputs.sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Fetch main branch
+        run: git fetch origin main
+        timeout-minutes: 5
 
       - name: Install nix
         uses: cachix/install-nix-action@v25
@@ -34,6 +43,15 @@ jobs:
 
       - name: Update flake lock
         run: nix flake update --commit-lock-file
+        timeout-minutes: 5
+
+      - name: Get new commit ref
+        id: commit
+        run: |
+          (
+            echo -n 'sha=';
+            git rev-parse HEAD
+          ) | tee -a $GITHUB_OUTPUT
 
       - name: Compare changes
         id: compare
@@ -41,7 +59,7 @@ jobs:
         continue-on-error: true
 
       - name: Create pull request
-        if: steps.compare.outcome == 'failure'
+        if: steps.compare.outcome == 'failure' && github.event_name != 'pull_request'
         run: |
           git push origin update-flake-lock --force
           if ! gh pr list --head update-flake-lock | grep -i open; then
@@ -50,3 +68,11 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        timeout-minutes: 5
+
+  build-on-schedule:
+    needs: update
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/build.yml
+    with:
+      git_ref: ${{ needs.update.outputs.commit_sha || github.sha }}
