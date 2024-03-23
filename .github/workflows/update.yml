@@ -18,6 +18,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      commit_sha: ${{ steps.commit.outputs.sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,6 +45,14 @@ jobs:
         run: nix flake update --commit-lock-file
         timeout-minutes: 5
 
+      - name: Get new commit ref
+        id: commit
+        run: |
+          (
+            echo -n 'sha=';
+            git rev-parse HEAD
+          ) | tee -a $GITHUB_OUTPUT
+
       - name: Compare changes
         id: compare
         run: git diff --exit-code origin/main
@@ -59,3 +69,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 5
+
+  build-on-schedule:
+    needs: update
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/build.yml
+    with:
+      git_ref: ${{ needs.update.outputs.commit_sha || github.sha }}
