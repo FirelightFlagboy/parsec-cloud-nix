@@ -46,8 +46,8 @@
       formatter.${ system} = pkgs.nixpkgs-fmt;
 
       packages.${system} = rec {
-        parsec-cloud-src = import packages/parsec-cloud-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
-        parsec-cloud-client = import packages/parsec-cloud-client {
+        parsec-cloud-src = import packages/v2/patched-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
+        parsec-cloud-client = import packages/v2/client.nix {
           inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
         };
       };
