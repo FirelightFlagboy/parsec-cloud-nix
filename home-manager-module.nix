@@ -1,8 +1,8 @@
 self: { lib, pkgs, config, ... }:
 
 let
-  clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-client;
-  srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-src;
+  clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-client;
+  srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-src;
 in
 {
   options.programs.parsec-cloud-client = with lib; {

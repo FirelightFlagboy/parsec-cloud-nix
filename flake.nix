@@ -32,25 +32,39 @@
       poetry2nix = import inputs.poetry2nix {
         inherit pkgs;
       };
-
-      parsec-cloud-version = "2.17.0";
-
-      parsec-cloud-raw-src = pkgs.fetchFromGitHub {
-        owner = "Scille";
-        repo = "parsec-cloud";
-        rev = "v${parsec-cloud-version}";
-        sha256 = "1qaip52mmgfw6fqzrblzgxf4bbj19c5xl5carcn00q9a36y2mpvc";
-      };
     in
     {
       formatter.${ system} = pkgs.nixpkgs-fmt;
 
-      packages.${system} = rec {
-        parsec-cloud-src = import packages/v2/patched-src { inherit pkgs parsec-cloud-raw-src parsec-cloud-version; };
-        parsec-cloud-client = import packages/v2/client.nix {
-          inherit pkgs parsec-cloud-src poetry2nix parsec-cloud-version system;
+      packages.${system} =
+        let
+          parsec-cloud = {
+            v2 =
+              let
+                version = "2.17.0";
+                commit_sha256 = "1qaip52mmgfw6fqzrblzgxf4bbj19c5xl5carcn00q9a36y2mpvc";
+              in
+              rec {
+                src = pkgs.fetchFromGitHub {
+                  owner = "Scille";
+                  repo = "parsec-cloud";
+                  rev = "v${version}";
+                  sha256 = commit_sha256;
+                };
+                patched-src = import packages/v2/patched-src { inherit pkgs version src; };
+                client = import packages/v2/client.nix {
+                  inherit pkgs poetry2nix system;
+                  src = patched-src;
+                };
+              };
+          };
+        in
+        {
+          parsec-cloud-v2-client = parsec-cloud.v2.client;
+          parsec-cloud-v2-src = parsec-cloud.v2.patched-src;
+
+          parsec-cloud-client = parsec-cloud.v2.client;
         };
-      };
 
       homeManagerModules = rec {
         parsec-cloud = import ./home-manager-module.nix inputs.self;

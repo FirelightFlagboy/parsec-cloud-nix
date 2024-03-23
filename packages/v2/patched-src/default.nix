@@ -1,9 +1,8 @@
-{ pkgs, parsec-cloud-version, parsec-cloud-raw-src, ... }:
+{ pkgs, version, src, ... }:
 
 pkgs.stdenv.mkDerivation {
+  inherit version src;
   name = "parsec-cloud-src";
-  version = parsec-cloud-version;
-  src = parsec-cloud-raw-src;
   outputs = [ "out" "doc" "icons" ];
   patches = [
     ./0001-Rework-poetry-dependencies-and-group.patch

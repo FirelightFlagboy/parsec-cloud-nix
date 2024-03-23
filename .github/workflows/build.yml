@@ -43,11 +43,11 @@ jobs:
         timeout-minutes: 1
 
       - name: Patch parsec-cloud source
-        run: nix build .#parsec-cloud-src
+        run: nix build .#parsec-cloud-v2-src
         timeout-minutes: 1
 
       - name: Build parsec-cloud client
-        run: nix build .#parsec-cloud-client
+        run: nix build .#parsec-cloud-v2-client
         timeout-minutes: 80 # 1h20m
 
       - name: Check flake
