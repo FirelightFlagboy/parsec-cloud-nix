@@ -1,8 +1,8 @@
-{ poetry2nix, parsec-cloud-src, pkgs, system, ... }:
+{ poetry2nix, src, pkgs, system, ... }:
 
 poetry2nix.mkPoetryApplication
 {
-  projectDir = parsec-cloud-src;
+  projectDir = src;
   extras = [ "core" ];
   python = pkgs.python39;
 
@@ -25,7 +25,7 @@ poetry2nix.mkPoetryApplication
   propagatedBuildInputs = [ pkgs.qt5.qtbase pkgs.qt5.qtwayland pkgs.gtk3 ];
 
   cargoDeps = pkgs.rustPlatform.importCargoLock {
-    lockFile = "${parsec-cloud-src}/Cargo.lock";
+    lockFile = "${src}/Cargo.lock";
   };
 
   # We do a single wrap operation for all the dependencies
@@ -101,7 +101,7 @@ poetry2nix.mkPoetryApplication
       });
     });
 
-  meta = parsec-cloud-src.meta // {
+  meta = src.meta // {
     platforms = [ system ];
   };
 
