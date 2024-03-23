@@ -1,6 +1,9 @@
 name: Update flake lock
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/update.yml
   workflow_dispatch:
   schedule:
     - cron: '0 5 * * 1'
@@ -18,6 +21,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Fetch main branch
+        run: git fetch origin main
+        timeout-minutes: 5
 
       - name: Install nix
         uses: cachix/install-nix-action@v25
@@ -41,7 +48,7 @@ jobs:
         continue-on-error: true
 
       - name: Create pull request
-        if: steps.compare.outcome == 'failure'
+        if: steps.compare.outcome == 'failure' && github.event_name != 'pull_request'
         run: |
           git push origin update-flake-lock --force
           if ! gh pr list --head update-flake-lock | grep -i open; then
