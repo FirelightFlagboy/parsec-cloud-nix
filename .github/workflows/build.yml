@@ -14,26 +14,33 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 120
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        timeout-minutes: 1
 
       - name: Install nix
         uses: cachix/install-nix-action@v25
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+        timeout-minutes: 1
 
       - name: Configure cachix
         uses: cachix/cachix-action@v14
         with:
           name: parsec-cloud
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        timeout-minutes: 1
 
       - name: Patch parsec-cloud source
         run: nix build .#parsec-cloud-src
+        timeout-minutes: 1
 
       - name: Build parsec-cloud client
         run: nix build .#parsec-cloud-client
+        timeout-minutes: 80 # 1h20m
 
       - name: Check flake
         run: nix flake check
+        timeout-minutes: 1
