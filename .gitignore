@@ -5,3 +5,5 @@
 /.cargo
 /cargo-vendor-dir
 /straces
+/client
+/electron
