@@ -5,14 +5,14 @@ let
   srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-src;
 in
 {
-  options.programs.parsec-cloud-client = with lib; {
-    enable = mkEnableOption "parsec-cloud-client";
+  options.programs.parsec-cloud-v2-client = with lib; {
+    enable = mkEnableOption "parsec-cloud-v2-client";
 
     package = mkOption {
       type = types.package;
       default = clientDefaultPackage;
       defaultText = lib.literalExpression ''
-        parsec-cloud.packages.''${pkgs.stdenv.hostPlatform.system}.parsec-cloud-client
+        parsec-cloud.packages.''${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-client
       '';
       description = mdDoc ''
         Parsec-cloud client package to use. Defaults to the one provided by the flake.
@@ -232,7 +232,7 @@ in
 
   config =
     let
-      cfgClient = config.programs.parsec-cloud-client;
+      cfgClient = config.programs.parsec-cloud-v2-client;
       client = cfgClient.package;
     in
     lib.mkIf cfgClient.enable {
@@ -286,12 +286,11 @@ in
         ipc_win32_mutex_name = "parsec-cloud";
       };
 
-      # TODO: Add icon
-      xdg.dataFile."applications/parsec-cloud.desktop".text = ''
+      xdg.dataFile."applications/parsec-cloud-v2.desktop".text = ''
         [Desktop Entry]
-        Name=Parsec
+        Name=Parsec Cloud
         Comment=Secure cloud framework
-        Exec=${client}/bin/parsec core gui %u
+        Exec=${client}/bin/parsec core gui %U
         Icon=${srcPackage.icons}/parsec.png
         Terminal=false
         Type=Application

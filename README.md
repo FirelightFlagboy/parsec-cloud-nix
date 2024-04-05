@@ -22,6 +22,12 @@ Packaging parsec-cloud in NixOS
     - [Packaging python - Nixos Wiki](https://nixos.wiki/wiki/Packaging/Python)
     - [`nixpkgs.fetchPypi`](https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/fetchpypi/default.nix)
   - [NixosRust](https://nixos.org/manual/nixpkgs/stable/#rust)
+  - [Nixos node](https://nixos.org/manual/nixpkgs/stable/#language-javascript)
+    - [npm packages](https://raw.githubusercontent.com/NixOS/nixpkgs/master/pkgs/development/node-packages/node-packages.nix)
+    - [nixos vscode](https://github.com/NixOS/nixpkgs/blob/nixos-23.11/pkgs/applications/editors/vscode/generic.nix)
+    - [wiki vscode](https://nixos.wiki/wiki/Visual_Studio_Code)
+  - [Nixos Rust](https://nixos.org/manual/nixpkgs/stable/#rust)
+    - [wiki Rust](https://nixos.wiki/wiki/Rust)
 
 - Nix Derivations:
   - [`mkDerivation` hooks](https://nixos.org/manual/nixpkgs/stable/#chap-hooks)
