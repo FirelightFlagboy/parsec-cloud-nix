@@ -2,11 +2,11 @@
   description = "A very basic flake";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
