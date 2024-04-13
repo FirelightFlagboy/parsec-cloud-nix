@@ -20,6 +20,10 @@ pkgs.stdenv.mkDerivation {
   '';
   dontBuild = true;
   patchFlags = "--strip=1 --verbose";
+  postPatch = ''
+    # Remove v prefix from version.
+    sed -i -e 's|version = "v|version = "|' pyproject.toml
+  '';
   installPhase = ''
     mkdir -p "$doc" "$out"
     cp -r docs/* HISTORY.rst "$doc"
