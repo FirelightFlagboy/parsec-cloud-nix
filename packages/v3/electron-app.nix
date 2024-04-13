@@ -3,6 +3,7 @@
 let
   pkgVersion = libparsec.version;
   pkgMajor = pkgs.lib.versions.major pkgVersion;
+  binName = "parsec-v${pkgMajor}";
 in
 pkgs.buildNpmPackage {
   pname = "parsec-cloud";
@@ -42,7 +43,7 @@ pkgs.buildNpmPackage {
     cp -r dist/linux-unpacked $out/libexec
 
     gappsWrapperArgsHook
-    makeBinaryWrapper $out/libexec/parsec-v${pkgMajor} $out/bin/parsec \
+    makeBinaryWrapper $out/libexec/${binName} $out/bin/${binName} \
       "''${gappsWrapperArgs[@]}" \
       --set CHROME_DEVEL_SANDBOX $out/libexec/chrome-sandbox
 
@@ -53,7 +54,7 @@ pkgs.buildNpmPackage {
   dontWrapGApps = true;
 
   meta = libparsec.meta // {
-    mainProgram = "parsec";
+    mainProgram = binName;
     description = "Open source Dropbox-like file sharing with full client encryption !";
   };
 }
