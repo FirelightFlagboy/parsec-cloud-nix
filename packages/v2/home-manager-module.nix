@@ -234,9 +234,23 @@ in
     let
       cfgClient = config.programs.parsec-cloud-v2-client;
       client = cfgClient.package;
+      clientMajorVersion = lib.versions.major client.version;
+
+      desktopItem = pkgs.makeDesktopItem {
+        name = "parsec-cloud-v${clientMajorVersion}";
+        desktopName = "Parsec Cloud v${clientMajorVersion}";
+        comment = "Secure cloud framework";
+        exec = "${client}/bin/parsec core gui %U";
+        icon = "${srcPackage.icons}/parsec.png";
+        terminal = false;
+        startupNotify = false;
+        startupWMClass = "Parsec";
+        categories = [ "Network" "FileTransfer" "Security" ];
+        mimeTypes = [ "x-scheme-handler/parsec" ];
+      };
     in
     lib.mkIf cfgClient.enable {
-      home.packages = [ client ];
+      home.packages = [ client desktopItem ];
 
       # Parsec cloud configuration can be found here.
       # https://github.com/Scille/parsec-cloud/blob/d639f80bc10fb0dff506ac123b3eb205f23e1690/parsec/core/config.py#L48-L197
@@ -285,19 +299,5 @@ in
         # Only used on windows systems, but we define it anyway.
         ipc_win32_mutex_name = "parsec-cloud";
       };
-
-      xdg.dataFile."applications/parsec-cloud-v2.desktop".text = ''
-        [Desktop Entry]
-        Name=Parsec Cloud
-        Comment=Secure cloud framework
-        Exec=${client}/bin/parsec core gui %U
-        Icon=${srcPackage.icons}/parsec.png
-        Terminal=false
-        Type=Application
-        Categories=Network;FileTransfer;Security;
-        StartupNotify=false
-        StartupWMClass=Parsec
-        MimeType=x-scheme-handler/parsec
-      '';
     };
 }
