@@ -240,7 +240,7 @@ in
         name = "parsec-cloud-v${clientMajorVersion}";
         desktopName = "Parsec Cloud v${clientMajorVersion}";
         comment = "Secure cloud framework";
-        exec = "${client}/bin/parsec core gui %U";
+        exec = "${client}/bin/parsec-v${clientMajorVersion} core gui %U";
         icon = "${srcPackage.icons}/parsec.png";
         terminal = false;
         startupNotify = false;
