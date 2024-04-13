@@ -29,7 +29,7 @@ in
         name = "parsec-cloud-v${clientMajorVersion}";
         desktopName = "Parsec Cloud v${clientMajorVersion}";
         comment = "Secure cloud framework";
-        exec = "${client}/bin/parsec-v${clientMajorVersion} %U";
+        exec = "${client}/bin/parsec %U";
         inherit icon;
         terminal = false;
         categories = [ "Office" "FileTransfer" "Filesystem" "Security" ];
