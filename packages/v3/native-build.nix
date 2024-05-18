@@ -33,7 +33,7 @@ pkgs.buildNpmPackage {
     cp -rva dist/{index.html,assets} $out
   '';
 
-  meta = with pkgs.lib; {
+  meta = let inherit (pkgs.lib) majorMinor licenses platforms; in {
     homepage = "https://parsec.cloud/";
     description = "Parsec cloud native client build used for the electron app";
     branch = "releases/${majorMinor version}";
