@@ -5,7 +5,7 @@ let
   srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-src;
 in
 {
-  options.programs.parsec-cloud-v2-client = let inherit (lib) mkEnableOption mkOption types mdDoc; in {
+  options.programs.parsec-cloud-v2-client = let inherit (lib) mkEnableOption mkOption types; in {
     enable = mkEnableOption "parsec-cloud-v2-client";
 
     package = mkOption {
@@ -14,7 +14,7 @@ in
       defaultText = lib.literalExpression ''
         parsec-cloud.packages.''${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-client
       '';
-      description = mdDoc ''
+      description = ''
         Parsec-cloud client package to use. Defaults to the one provided by the flake.
       '';
     };
@@ -61,7 +61,7 @@ in
         type = types.bool;
         default = false;
         example = true;
-        description = mdDoc ''
+        description = ''
           Enable or disable mountpoint
 
           > Note: The application will enable that option on certain commands (like starting the GUI)
@@ -96,7 +96,7 @@ in
       type = types.nullOr types.path;
       default = null;
       example = "~/.config/parsec/custom-prevent-sync-pattern";
-      description = mdDoc ''
+      description = ''
         File containing file pattern that we don't want to sync.
         The file format is similar to `.gitignore`.
       '';
@@ -151,7 +151,7 @@ in
       type = types.nullOr types.str;
       default = null;
       example = "30ceb836cc786ea71605698c45f6d62a0dd4a0ab7fe3a379380a6ca0a4146d0a";
-      description = mdDoc ''
+      description = ''
         The ID of the last device used.
         This will put the said device at the top of the list of devices.
 
@@ -208,7 +208,7 @@ in
         type = types.bool;
         default = false;
         example = true;
-        description = mdDoc ''
+        description = ''
           Show confined files in the file manager.
 
           > Confined files are not synced with the server.

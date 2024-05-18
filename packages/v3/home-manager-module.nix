@@ -13,7 +13,7 @@ in
       defaultText = lib.literalExpression ''
         parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client
       '';
-      description = mdDoc ''
+      description = ''
         Parsec-cloud client package to use. Defaults to the one provided by the flake.
       '';
     };
