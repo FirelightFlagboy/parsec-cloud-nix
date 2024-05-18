@@ -34,7 +34,7 @@ poetry2nix.mkPoetryApplication
 
   # `poetry2nix` already do a wrapping operation for us.
   # We need to add aditional arguments for the application to work with QT, Fuse and Dconf.
-  makeWrapperArgs = with pkgs; [
+  makeWrapperArgs = let fuse = pkgs.fuse; in [
     "\${qtWrapperArgs[@]}"
     "\${gappsWrapperArgs[@]}"
     "--set FUSE_LIBRARY_PATH ${fuse}/lib/libfuse.so.${fuse.version}"

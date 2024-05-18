@@ -109,12 +109,10 @@
         default = parsec-cloud.v3;
       };
 
-      devShells.${system}.default = with pkgs; mkShell {
-        buildInputs = [
-          nixpkgs-fmt
-          nil
-          cachix
-        ];
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = builtins.attrValues {
+          inherit (pkgs) nixpkgs-fmt nil cachix;
+        };
 
         shellHook = ''
           echo "Good luck with your journey to nix (using flake)."

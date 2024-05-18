@@ -42,12 +42,12 @@ pkgs.stdenv.mkDerivation {
     cp -r icons "$icons"
   '';
   dontFixup = true;
-  meta = with pkgs.lib; {
+  meta = let inherit (pkgs.lib) licenses majorMinor platforms; in {
     homepage = "https://parsec.cloud/";
     description = "Open source Dropbox-like file sharing with full client encryption !";
-    branch = "releases/${majorMinor parsec-cloud-version}";
-    license = with licenses; [ agpl3Only bsl11 ];
-    changelog = "https://github.com/Scille/parsec-cloud/tree/v${parsec-cloud-version}/HISTORY.rst";
+    branch = "releases/${majorMinor version}";
+    license = builtins.attrValues { inherit (licenses) agpl3Only bsl11; };
+    changelog = "https://github.com/Scille/parsec-cloud/tree/v${version}/HISTORY.rst";
     platforms = platforms.all;
   };
 }

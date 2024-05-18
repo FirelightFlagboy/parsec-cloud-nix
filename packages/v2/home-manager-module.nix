@@ -5,7 +5,7 @@ let
   srcPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v2-src;
 in
 {
-  options.programs.parsec-cloud-v2-client = with lib; {
+  options.programs.parsec-cloud-v2-client = let inherit (lib) mkEnableOption mkOption types mdDoc; in {
     enable = mkEnableOption "parsec-cloud-v2-client";
 
     package = mkOption {

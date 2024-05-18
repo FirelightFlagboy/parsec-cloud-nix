@@ -31,14 +31,9 @@
     '';
 
   nativeBuildInputs = [ pkgs.pkg-config ];
-  buildInputs = with pkgs;
-    [
-      openssl
-      sqlite
-      fuse3
-    ];
+  buildInputs = builtins.attrValues { inherit (pkgs) openssl sqlite fuse3; };
 
-  meta = with pkgs.lib; {
+  meta = let inherit (pkgs.lib) majorMinor licenses; in {
     homepage = "https://parsec.cloud/";
     description = "Parsec library for Node.js";
     branch = "releases/${majorMinor version}";
