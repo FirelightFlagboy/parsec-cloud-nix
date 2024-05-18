@@ -103,6 +103,6 @@ poetry2nix.mkPoetryApplication
 
   meta = src.meta // {
     platforms = [ system ];
+    mainProgram = "parsec-v2";
   };
-
 }
