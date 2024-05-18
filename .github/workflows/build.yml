@@ -32,6 +32,12 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 120
     steps:
+      - name: Update commit status
+        uses: myrotvorets/set-commit-status-action@3730c0a348a2ace3c110851bed53331bc6406e9f # v2.0.1
+        with:
+          status: pending
+          context: "Building parsec-cloud ${{ matrix.version }}"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -58,3 +64,16 @@ jobs:
       - name: Check flake
         run: nix flake check
         timeout-minutes: 1
+
+      - name: Update commit status to success
+        uses: myrotvorets/set-commit-status-action@3730c0a348a2ace3c110851bed53331bc6406e9f # v2.0.1
+        with:
+          status: success
+          context: "Building parsec-cloud ${{ matrix.version }}"
+
+      - name: Update commit status to error
+        if: ${{ failure() }}
+        uses: myrotvorets/set-commit-status-action@3730c0a348a2ace3c110851bed53331bc6406e9f # v2.0.1
+        with:
+          status: error
+          context: "Building parsec-cloud ${{ matrix.version }}"
