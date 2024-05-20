@@ -4,7 +4,7 @@ let
   clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client;
 in
 {
-  options.programs.parsec-cloud-v3-client = let inherit (lib) types lib; in {
+  options.programs.parsec-cloud-v3-client = let inherit (lib) mkEnableOption mkOption types; in {
     enable = mkEnableOption "parsec-cloud-v3-client";
 
     package = mkOption {
