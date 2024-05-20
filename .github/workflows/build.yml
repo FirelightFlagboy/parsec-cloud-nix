@@ -37,6 +37,8 @@ jobs:
         with:
           status: pending
           context: "Building parsec-cloud ${{ matrix.version }}"
+          sha: ${{ inputs.git_ref }}
+        timeout-minutes: 1
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -70,6 +72,8 @@ jobs:
         with:
           status: success
           context: "Building parsec-cloud ${{ matrix.version }}"
+          sha: ${{ inputs.git_ref }}
+        timeout-minutes: 1
 
       - name: Update commit status to error
         if: ${{ failure() }}
@@ -77,3 +81,5 @@ jobs:
         with:
           status: error
           context: "Building parsec-cloud ${{ matrix.version }}"
+          sha: ${{ inputs.git_ref }}
+        timeout-minutes: 1
