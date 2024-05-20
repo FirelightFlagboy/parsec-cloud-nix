@@ -72,7 +72,7 @@ jobs:
 
   build-on-schedule:
     needs: update
-    if: github.event_name == 'schedule'
+    if: github.event_name != 'pull_request'
     uses: ./.github/workflows/build.yml
     with:
       git_ref: ${{ needs.update.outputs.commit_sha || github.sha }}
