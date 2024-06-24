@@ -33,8 +33,8 @@ pkgs.buildNpmPackage {
       --linux \
       --dir \
       --config=electron-builder-config.json \
-      --config.electronDist=${pkgs.electron_28}/libexec/electron \
-      --config.electronVersion=${pkgs.electron_28.version}
+      --config.electronDist=${pkgs.electron_30}/libexec/electron \
+      --config.electronVersion=${pkgs.electron_30.version}
   '';
 
   # Inspired by https://github.com/NixOS/nixpkgs/blob/af105fd3758230351db538ade56e862ac947f849/pkgs/development/tools/electron/wrapper.nix
