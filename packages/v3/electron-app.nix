@@ -3,7 +3,7 @@
 let
   pkgVersion = libparsec.version;
   pkgMajor = pkgs.lib.versions.major pkgVersion;
-  binName = "parsec-v${pkgMajor}";
+  binName = "parsec";
 in
 pkgs.buildNpmPackage {
   pname = "parsec-cloud";
@@ -12,7 +12,7 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-kOGJtJkwkU8/N1iVW23OaRcEdVxn0cLKodRufRbrV4g=";
+  npmDepsHash = "sha256-67gfTbRENfkZ19cvsFmmEJwoX7wVYZF6LxCXhr3Bw3Q=";
 
   configurePhase = ''
     mkdir -pv build/{,generated-ts/}src app
