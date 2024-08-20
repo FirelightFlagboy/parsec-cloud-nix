@@ -95,7 +95,7 @@
           parsec-cloud-v2-src = parsec-cloud.v2.patched-src;
 
           parsec-cloud-v3-node-lib = parsec-cloud.v3.libparsec-node;
-          # parsec-cloud-v3-native-build = parsec-cloud.v3.native-build;
+          parsec-cloud-v3-native-build = parsec-cloud.v3.native-build;
           parsec-cloud-v3-client = parsec-cloud.v3.client;
 
           parsec-cloud-client = parsec-cloud.v3.client;
@@ -111,7 +111,12 @@
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = builtins.attrValues {
-          inherit (pkgs) nixpkgs-fmt nil cachix;
+          inherit (pkgs)
+            nixpkgs-fmt
+            nil
+            cachix
+            gh
+            prefetch-npm-deps;
         };
 
         shellHook = ''
