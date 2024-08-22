@@ -45,7 +45,8 @@ pkgs.buildNpmPackage {
     gappsWrapperArgsHook
     makeBinaryWrapper $out/libexec/${binName} $out/bin/${binName} \
       "''${gappsWrapperArgs[@]}" \
-      --set CHROME_DEVEL_SANDBOX $out/libexec/chrome-sandbox
+      --set CHROME_DEVEL_SANDBOX $out/libexec/chrome-sandbox \
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
 
     cp -rva assets/icon.png $icon
   '';
