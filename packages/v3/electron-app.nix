@@ -12,7 +12,7 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-LRUpV7vjlvCQr3GDvlJynfAWWLk1RkdFCZ8itW/sTGc=";
+  npmDepsHash = "sha256-DbsscghR5OjrymAiGjgAj8Tw6nWLSFF4vwMV5xQLqKc=";
 
   configurePhase = ''
     mkdir -pv build/{,generated-ts/}src app
