@@ -12,7 +12,7 @@ REPO=parsec-cloud
 TAG=${1:?Missing release tag}
 VERSION=${TAG#v} # Remove the leading 'v'
 
-if [ -z "$TMP_DIR" ]; then
+if [ -z "${TMP_DIR:-}" ]; then
     echo "No TMP_DIR set, creating a temporary directory that will be removed on exit."
     TMP_DIR=$(mktemp -d)
     trap "rm -rf $TMP_DIR" EXIT
