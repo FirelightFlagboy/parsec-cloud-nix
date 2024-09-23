@@ -6,14 +6,13 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client";
 
-  npmDepsHash = "sha256-x/0wpKrRMRwzbrbkq4vAv4x4RfmOEf/+ZQHzTjHunbk=";
+  npmDepsHash = "sha256-lb4dxP/ALDPlEVmqh/L28tZAnXPTOD1lbmAr1cAyGWE=";
 
   makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
 
   prePatch =
     let
-      # FIXME: Change me back to `mode=production`
-      buildCmd = "vite build --mode=release-candidate";
+      buildCmd = "vite build --mode=production";
     in
     ''
       set -e
