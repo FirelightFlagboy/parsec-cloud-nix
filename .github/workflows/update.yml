@@ -41,8 +41,19 @@ jobs:
       - name: Switch to update branch
         run: git switch --create update-flake-lock origin/main
 
+      - name: Get last stable commit for nixpkgs
+        id: nixpkgs
+        run: |
+          NIXPKGS_CHANNEL=$(jq -r .nodes.nixpkgs.original.ref flake.lock)
+          STABLE_REVISION=$(curl -L https://channels.nixos.org/$NIXPKGS_CHANNEL/git-revision)
+
+          (
+            echo "chanel=$NIXPKGS_CHANNEL";
+            echo "revision=$STABLE_REVISION"
+          ) | tee -a $GITHUB_OUTPUT
+
       - name: Update flake lock
-        run: nix flake update --commit-lock-file
+        run: nix flake update --commit-lock-file --override-input nixpkgs github:nixos/nixpkgs/${{ steps.nixpkgs.outputs.revision }}
         timeout-minutes: 5
 
       - name: Get new commit ref
