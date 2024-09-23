@@ -53,7 +53,7 @@ jobs:
           ) | tee -a $GITHUB_OUTPUT
 
       - name: Update flake lock
-        run: nix flake update --commit-lock-file --override-input nixpkgs github:NixOS/nixpkgs/${{ steps.nixpkgs.outputs.revision }}
+        run: nix flake update --commit-lock-file --override-input nixpkgs github:nixos/nixpkgs/${{ steps.nixpkgs.outputs.revision }}
         timeout-minutes: 5
 
       - name: Get new commit ref
