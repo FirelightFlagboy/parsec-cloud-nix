@@ -12,7 +12,7 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-67gfTbRENfkZ19cvsFmmEJwoX7wVYZF6LxCXhr3Bw3Q=";
+  npmDepsHash = "sha256-ymjexCJIm3eVhwbq8v8ob98U3TUQoxdwECJOXhOEq+I=";
 
   configurePhase = ''
     mkdir -pv build/{,generated-ts/}src app
@@ -43,9 +43,10 @@ pkgs.buildNpmPackage {
     cp -r dist/linux-unpacked $out/libexec
 
     gappsWrapperArgsHook
-    makeBinaryWrapper $out/libexec/${binName} $out/bin/${binName} \
+    makeWrapper $out/libexec/${binName} $out/bin/${binName} \
       "''${gappsWrapperArgs[@]}" \
-      --set CHROME_DEVEL_SANDBOX $out/libexec/chrome-sandbox
+      --set CHROME_DEVEL_SANDBOX $out/libexec/chrome-sandbox \
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
 
     cp -rva assets/icon.png $icon
   '';
