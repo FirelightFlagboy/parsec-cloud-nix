@@ -38,6 +38,8 @@
       poetry2nix = import inputs.poetry2nix {
         inherit pkgs;
       };
+      # A prelease is denotted is the patch component of a version contain a hyphen ("-")
+      isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
     in
     {
       formatter.${ system} = pkgs.nixpkgs-fmt;
@@ -81,7 +83,7 @@
                 };
 
                 libparsec-node = import packages/v3/libparsec-node.nix { inherit pkgs version src rust-toolchain system; };
-                native-build = import packages/v3/native-build.nix { inherit pkgs src version; };
+                native-build = import packages/v3/native-build.nix { inherit pkgs src version; isPrerelease = isPrerelease version; };
                 client = import packages/v3/electron-app.nix {
                   inherit pkgs src;
                   client-build = native-build;

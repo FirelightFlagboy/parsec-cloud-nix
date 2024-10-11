@@ -1,4 +1,4 @@
-{ pkgs, src, version, ... }:
+{ pkgs, src, version, isPrerelease, ... }:
 
 pkgs.buildNpmPackage {
   inherit version;
@@ -12,7 +12,7 @@ pkgs.buildNpmPackage {
 
   prePatch =
     let
-      buildCmd = "vite build --mode=production";
+      buildCmd = "vite build --mode=${if isPrerelease then "release-candidate" else "production"}";
     in
     ''
       set -e
