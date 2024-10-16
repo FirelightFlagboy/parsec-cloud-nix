@@ -38,7 +38,7 @@
       poetry2nix = import inputs.poetry2nix {
         inherit pkgs;
       };
-      # A prelease is denotted if version contain a hyphen ("-")
+      # A prelease is denotted if version contain a hyphen.
       isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
     in
     {
