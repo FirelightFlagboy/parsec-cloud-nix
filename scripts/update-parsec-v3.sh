@@ -1,4 +1,4 @@
-set -eu
+set -eu -o pipefail
 
 
 # Allow the user to overwrite `SCRIPTDIR` by exporting it beforehand.
@@ -12,28 +12,46 @@ REPO=parsec-cloud
 TAG=${1:?Missing release tag}
 VERSION=${TAG#v} # Remove the leading 'v'
 
+declare -a TMP_FILES
+function cleanup {
+    rm -rf ${TMP_FILES[@]}
+}
+trap "cleanup" EXIT
+
+function fail {
+    local lc="$BASH_COMMAND" previous_rc=$?
+
+    echo "An error occurred in the update script."
+    echo "The following command exited with $previous_rc:"
+    echo "$lc"
+}
+
+trap "fail" ERR
+
 if [ -z "${TMP_DIR:-}" ]; then
     echo "No TMP_DIR set, creating a temporary directory that will be removed on exit."
     TMP_DIR=$(mktemp -d)
-    trap "rm -rf $TMP_DIR" EXIT
+    TMP_FILES+=("$TMP_DIR")
 fi
 
 mkdir -p $TMP_DIR
-cd $TMP_DIR
 
-! [ -d $TMP_DIR/parsec-cloud ] && git clone https://github.com/$OWNER/$REPO.git --branch ${TAG} --depth 1
+! [ -d $TMP_DIR/parsec-cloud ] && git clone https://github.com/$OWNER/$REPO.git --branch ${TAG} --depth 1 $TMP_DIR/parsec-cloud
 
-COMMIT_REV=$(git -C parsec-cloud rev-parse HEAD)
+COMMIT_REV=$(git -C $TMP_DIR/parsec-cloud rev-parse HEAD)
 
 COMMIT_ARCHIVE_SHA256=$(nix-prefetch-url --unpack https://github.com/$OWNER/$REPO/archive/$COMMIT_REV.tar.gz)
 CLIENT_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/package-lock.json)
 ELECTRON_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/electron/package-lock.json)
 
-sed -i \
-    -e "68s/version = \".*\";/version = \"${VERSION}\";/" \
-    -e "71s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/" \
-    -e "73s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/" \
-    $ROOTDIR/flake.nix
+TMP_FILES+=("$ROOTDIR/flake.nix.tmp")
+sed \
+    -e "70{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
+    -e "73{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
+    -e "75{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
+    $ROOTDIR/flake.nix > $ROOTDIR/flake.nix.tmp
+
+mv $ROOTDIR/flake.nix.tmp $ROOTDIR/flake.nix
 
 sed -i \
     -e "s;npmDepsHash = \".*\";npmDepsHash = \"${CLIENT_NPM_DEPS_HASH}\";" \
@@ -42,3 +60,8 @@ sed -i \
 sed -i \
     -e "s;npmDepsHash = \".*\";npmDepsHash = \"${ELECTRON_NPM_DEPS_HASH}\";" \
     $ROOTDIR/packages/v3/electron-app.nix
+
+if [ "$(git status --porcelain | grep -e flake.nix -e packages/v3/native-build.nix -e packages/v3/electron-app.nix --count)" -ne 3 ]; then
+    echo "Invalid number of file changes, a 'sed' command has failed"
+    exit 1
+fi

@@ -1,4 +1,4 @@
-{ pkgs, src, version, ... }:
+{ pkgs, src, version, isPrerelease, ... }:
 
 pkgs.buildNpmPackage {
   inherit version;
@@ -6,13 +6,13 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client";
 
-  npmDepsHash = "sha256-ulj3LgcEDHCaPffOormdPqoPTUCe+XY4CE/8XH8GD48=";
+  npmDepsHash = "sha256-Ui4HWWKm0lJjlGZsU8lPAzRPSXEBnhj9j9LtWH/5uSU=";
 
   makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
 
   prePatch =
     let
-      buildCmd = "vite build --mode=production";
+      buildCmd = "vite build --mode=${if isPrerelease then "release-candidate" else "production"}";
     in
     ''
       set -e
