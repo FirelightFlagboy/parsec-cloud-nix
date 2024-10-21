@@ -23,8 +23,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - version: v2
-            build-timeout-minutes: 80 # 1h20m
           - version: v3
             build-timeout-minutes: 10
       fail-fast: false
