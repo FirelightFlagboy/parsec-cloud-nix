@@ -4,6 +4,7 @@ let
   pkgVersion = libparsec.version;
   pkgMajor = pkgs.lib.versions.major pkgVersion;
   binName = "parsec";
+  electron = pkgs.electron_31;
 in
 pkgs.buildNpmPackage {
   pname = "parsec-cloud";
@@ -33,8 +34,8 @@ pkgs.buildNpmPackage {
       --linux \
       --dir \
       --config=electron-builder-config.json \
-      --config.electronDist=${pkgs.electron_30}/libexec/electron \
-      --config.electronVersion=${pkgs.electron_30.version}
+      --config.electronDist=${electron}/libexec/electron \
+      --config.electronVersion=${electron.version}
   '';
 
   # Inspired by https://github.com/NixOS/nixpkgs/blob/af105fd3758230351db538ade56e862ac947f849/pkgs/development/tools/electron/wrapper.nix
