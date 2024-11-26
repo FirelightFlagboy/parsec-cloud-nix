@@ -31,7 +31,7 @@
     '';
 
   nativeBuildInputs = [ pkgs.pkg-config ];
-  buildInputs = builtins.attrValues { inherit (pkgs) openssl sqlite fuse3; };
+  buildInputs = builtins.attrValues { inherit (pkgs) openssl sqlite fuse3 dbus; };
 
   meta = let inherit (pkgs.lib) majorMinor licenses; in {
     homepage = "https://parsec.cloud/";
