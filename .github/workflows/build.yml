@@ -39,10 +39,7 @@ jobs:
         timeout-minutes: 1
 
       - name: Increase disk available size by removing pre-installed stuff
-        run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
-          sudo docker image prune --all --force
-          sudo docker builder prune -a
+        uses: FirelightFlagboy/gh-runner-free-disk-space@66ad3a1b63f6a430fb7cebb7287d9a6cb7b01c8b
         timeout-minutes: 2
 
       - name: Checkout repository
