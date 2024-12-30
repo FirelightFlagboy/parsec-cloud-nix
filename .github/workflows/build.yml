@@ -38,6 +38,13 @@ jobs:
           sha: ${{ inputs.git_ref }}
         timeout-minutes: 1
 
+      - name: Increase disk available size by removing pre-installed stuff
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          sudo docker builder prune -a
+        timeout-minutes: 2
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
