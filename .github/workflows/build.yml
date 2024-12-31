@@ -24,7 +24,7 @@ jobs:
       matrix:
         include:
           - version: v3
-            build-timeout-minutes: 10
+            build-timeout-minutes: 15
       fail-fast: false
     name: "Build parsec-cloud ${{ matrix.version }}"
     runs-on: ubuntu-22.04
