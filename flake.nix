@@ -67,12 +67,12 @@
               };
             v3 =
               let
-                version = "3.2.4-rc.2";
+                version = "3.2.4-rc.3";
                 # Currently parsec-cloud only provide a nightly release for v3 which change each day.
                 # So fixing the commit_rev to stay on the same version.
-                commit_rev = "7235d6f1288d9343ebb155a7f772cd99ecd16420";
+                commit_rev = "2e958737393dbc9d34d738e19567e316fe9fcca8";
                 # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-                commit_sha256 = "0wn6flddcn7gx2i95fp8cpd8l6rbf3h17s161vm4f9vdk58552zz";
+                commit_sha256 = "1chk65ikyx562z6svjhh9mh8h8x36hd98m45j0j43qd85ybbmxyd";
               in
               rec {
                 src = pkgs.fetchFromGitHub {
