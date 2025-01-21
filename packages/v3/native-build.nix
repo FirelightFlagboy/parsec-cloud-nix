@@ -6,7 +6,7 @@ pkgs.buildNpmPackage {
 
   src = "${src}/client";
 
-  npmDepsHash = "sha256-JqgAPbWj/J82JSmZYPnt4yyrkd0y6mFKC3I7NO+a7sI=";
+  npmDepsHash = "sha256-qOGmwbvSam2nmhPcuqVMMT/ylrtA8XFsQBssttPBwwI=";
 
   makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
 
