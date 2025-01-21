@@ -4,7 +4,7 @@ let
   pkgVersion = libparsec.version;
   pkgMajor = pkgs.lib.versions.major pkgVersion;
   binName = "parsec";
-  electron = pkgs.electron_31;
+  electron = pkgs.electron_32;
 in
 pkgs.buildNpmPackage {
   pname = "parsec-cloud";
