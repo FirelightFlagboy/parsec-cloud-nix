@@ -13,7 +13,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, fenix, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      fenix,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
 
@@ -42,7 +48,7 @@
       isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
     in
     {
-      formatter.${ system} = pkgs.nixpkgs-fmt;
+      formatter.${system} = pkgs.nixpkgs-fmt;
 
       packages.${system} =
         let
@@ -82,12 +88,32 @@
                   sha256 = commit_sha256;
                 };
 
-                libparsec-node = import packages/v3/libparsec-node.nix { inherit pkgs version src rust-toolchain system; };
-                native-build = import packages/v3/native-build.nix { inherit pkgs src version; isPrerelease = isPrerelease version; };
+                libparsec-node = import packages/v3/libparsec-node.nix {
+                  inherit
+                    pkgs
+                    version
+                    src
+                    rust-toolchain
+                    system
+                    ;
+                };
+                native-build = import packages/v3/native-build.nix {
+                  inherit pkgs src version;
+                  isPrerelease = isPrerelease version;
+                };
                 client = import packages/v3/electron-app.nix {
                   inherit pkgs src;
                   client-build = native-build;
                   libparsec = libparsec-node;
+                };
+                cli = import packages/v3/parsec-cli.nix {
+                  inherit
+                    pkgs
+                    version
+                    src
+                    rust-toolchain
+                    system
+                    ;
                 };
               };
           };
@@ -99,8 +125,10 @@
           parsec-cloud-v3-node-lib = parsec-cloud.v3.libparsec-node;
           parsec-cloud-v3-native-build = parsec-cloud.v3.native-build;
           parsec-cloud-v3-client = parsec-cloud.v3.client;
+          parsec-cloud-v3-cli = parsec-cloud.v3.cli;
 
           parsec-cloud-client = parsec-cloud.v3.client;
+          parsec-cloud-cli = parsec-cloud.v3.cli;
         };
 
       homeManagerModules = rec {
@@ -118,7 +146,8 @@
             nil
             cachix
             gh
-            prefetch-npm-deps;
+            prefetch-npm-deps
+            ;
         };
 
         shellHook = ''

@@ -14,7 +14,6 @@
   cargoBuildFeatures = [ ];
 
   cargoLock.lockFile = "${src}/Cargo.lock";
-  cargoHash = pkgs.lib.fakeHash;
 
   doCheck = false;
 
