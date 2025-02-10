@@ -1,23 +1,33 @@
-self: { lib, pkgs, config, ... }:
+self:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 let
   clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client;
 in
 {
-  options.programs.parsec-cloud-v3-client = let inherit (lib) mkEnableOption mkOption types; in {
-    enable = mkEnableOption "parsec-cloud-v3-client";
+  options.programs.parsec-cloud-v3-client =
+    let
+      inherit (lib) mkEnableOption mkOption types;
+    in
+    {
+      enable = mkEnableOption "parsec-cloud-v3-client";
 
-    package = mkOption {
-      type = types.package;
-      default = clientDefaultPackage;
-      defaultText = lib.literalExpression ''
-        parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client
-      '';
-      description = ''
-        Parsec-cloud client package to use. Defaults to the one provided by the flake.
-      '';
+      package = mkOption {
+        type = types.package;
+        default = clientDefaultPackage;
+        defaultText = lib.literalExpression ''
+          parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client
+        '';
+        description = ''
+          Parsec-cloud client package to use. Defaults to the one provided by the flake.
+        '';
+      };
     };
-  };
 
   config =
     let
@@ -32,7 +42,12 @@ in
         exec = "${client}/bin/parsec %U";
         inherit icon;
         terminal = false;
-        categories = [ "Office" "FileTransfer" "Filesystem" "Security" ];
+        categories = [
+          "Office"
+          "FileTransfer"
+          "Filesystem"
+          "Security"
+        ];
         mimeTypes = [ "x-scheme-handler/parsec${clientMajorVersion}" ];
       };
     in

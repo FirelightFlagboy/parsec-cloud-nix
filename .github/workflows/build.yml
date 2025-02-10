@@ -62,7 +62,12 @@ jobs:
         timeout-minutes: 1
 
       - name: Build parsec-cloud client
-        run: nix build .#parsec-cloud-${{ matrix.version }}-client
+        run: nix build -L .#parsec-cloud-${{ matrix.version }}-client
+        timeout-minutes: ${{ matrix.build-timeout-minutes }}
+
+      - name: Build parsec-cloud cli
+        if: matrix.version == 'v3'
+        run: nix build -L .#parsec-cloud-${{ matrix.version }}-cli
         timeout-minutes: ${{ matrix.build-timeout-minutes }}
 
       - name: Check flake
