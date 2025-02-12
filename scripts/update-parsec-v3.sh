@@ -41,6 +41,14 @@ mkdir -p $TMP_DIR
 COMMIT_REV=$(git -C $TMP_DIR/parsec-cloud rev-parse HEAD)
 
 COMMIT_ARCHIVE_SHA256=$(nix-prefetch-url --unpack https://github.com/$OWNER/$REPO/archive/$COMMIT_REV.tar.gz)
+
+PATCH_CMD="patch --strip=1 --input $ROOTDIR/packages/v3/patches/use-cdn-instead-of-vendored-xlsx.patch --dir $TMP_DIR/parsec-cloud"
+
+# Check if patch is alraedy applied by trying to revert it
+if ! $PATCH_CMD --force --dry-run --reverse; then
+    $PATCH_CMD
+fi
+
 CLIENT_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/package-lock.json)
 ELECTRON_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/electron/package-lock.json)
 
