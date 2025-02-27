@@ -57,6 +57,7 @@
               let
                 version = "2.17.0";
                 commit_sha256 = "1qaip52mmgfw6fqzrblzgxf4bbj19c5xl5carcn00q9a36y2mpvc";
+                callPackage = pkgs.lib.callPackageWith (pkgs // { inherit version; });
               in
               rec {
                 src = pkgs.fetchFromGitHub {
@@ -65,9 +66,9 @@
                   rev = "v${version}";
                   sha256 = commit_sha256;
                 };
-                patched-src = import packages/v2/patched-src { inherit pkgs version src; };
-                client = import packages/v2/client.nix {
-                  inherit pkgs poetry2nix system;
+                patched-src = callPackage packages/v2/patched-src { inherit src; };
+                client = callPackage packages/v2/client.nix {
+                  inherit poetry2nix;
                   src = patched-src;
                 };
               };
@@ -79,43 +80,23 @@
                 commit_rev = "85a5bd54a033a388bfc6ad39f0461895254c6d82";
                 # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
                 commit_sha256 = "060d8fmfigm7r0mgkyd5iszhl82cl6mxmms9xlv48a28j26927m9";
-              in
-              rec {
-                src = pkgs.fetchFromGitHub {
-                  owner = "Scille";
-                  repo = "parsec-cloud";
-                  rev = commit_rev;
-                  sha256 = commit_sha256;
-                };
-
-                libparsec-node = import packages/v3/libparsec-node.nix {
-                  inherit
-                    pkgs
-                    version
-                    src
-                    rust-toolchain
-                    system
-                    ;
-                };
-                native-build = import packages/v3/native-build.nix {
-                  inherit pkgs src version;
+                callPackage = pkgs.lib.callPackageWith (pkgs // package);
+                package = {
+                  inherit version rust-toolchain system;
                   isPrerelease = isPrerelease version;
+                  src = pkgs.fetchFromGitHub {
+                    owner = "Scille";
+                    repo = "parsec-cloud";
+                    rev = commit_rev;
+                    sha256 = commit_sha256;
+                  };
+                  libparsec-node = callPackage packages/v3/libparsec-node.nix { };
+                  native-client-build = callPackage packages/v3/native-build.nix { };
+                  client = callPackage packages/v3/electron-app.nix { };
+                  cli = callPackage packages/v3/parsec-cli.nix { };
                 };
-                client = import packages/v3/electron-app.nix {
-                  inherit pkgs src;
-                  client-build = native-build;
-                  libparsec = libparsec-node;
-                };
-                cli = import packages/v3/parsec-cli.nix {
-                  inherit
-                    pkgs
-                    version
-                    src
-                    rust-toolchain
-                    system
-                    ;
-                };
-              };
+              in
+              package;
           };
         in
         {
@@ -123,7 +104,7 @@
           parsec-cloud-v2-src = parsec-cloud.v2.patched-src;
 
           parsec-cloud-v3-node-lib = parsec-cloud.v3.libparsec-node;
-          parsec-cloud-v3-native-build = parsec-cloud.v3.native-build;
+          parsec-cloud-v3-native-client-build = parsec-cloud.v3.native-client-build;
           parsec-cloud-v3-client = parsec-cloud.v3.client;
           parsec-cloud-v3-cli = parsec-cloud.v3.cli;
 

@@ -1,13 +1,23 @@
 {
-  pkgs,
+  stdenvNoCC,
   src,
   version,
   isPrerelease,
-  ...
+  buildNpmPackage,
+  nodejs_20,
+  makeSetupHook,
+  diffutils,
+  jq,
+  prefetch-npm-deps,
+  lib,
+  pkg-config,
+  pixman,
+  cairo,
+  pango,
 }:
 
 let
-  patchedSrc = pkgs.stdenvNoCC.mkDerivation {
+  patchedSrc = stdenvNoCC.mkDerivation {
     inherit version src;
     pname = "parsec-cloud-client-src";
     patches = [
@@ -20,10 +30,9 @@ let
         cp -ra client "$out"
       '';
   };
-  inherit (pkgs) buildNpmPackage;
-  nodejs = pkgs.nodejs_20;
+  nodejs = nodejs_20;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
-  npmConfigHook = pkgs.makeSetupHook {
+  npmConfigHook = makeSetupHook {
     name = "npm-config-hook";
     substitutions = {
       nodeSrc = nodejs;
@@ -31,12 +40,12 @@ let
 
       # Specify `diff`, `jq`, and `prefetch-npm-deps` by abspath to ensure that the user's build
       # inputs do not cause us to find the wrong binaries.
-      diff = "${pkgs.diffutils}/bin/diff";
-      jq = "${pkgs.jq}/bin/jq";
-      prefetchNpmDeps = "${pkgs.prefetch-npm-deps}/bin/prefetch-npm-deps";
+      diff = "${diffutils}/bin/diff";
+      jq = "${jq}/bin/jq";
+      prefetchNpmDeps = "${prefetch-npm-deps}/bin/prefetch-npm-deps";
 
       nodeVersion = nodejs.version;
-      nodeVersionMajor = pkgs.lib.versions.major nodejs.version;
+      nodeVersionMajor = lib.versions.major nodejs.version;
     };
   } ./npm-config-hook.sh;
 in
@@ -68,14 +77,14 @@ buildNpmPackage {
     CYPRESS_INSTALL_BINARY = "0";
   };
   nativeBuildInputs = [
-    pkgs.pkg-config
+    pkg-config
   ];
   nodejs = nodejs;
   buildInputs = [
     # Dependencies for canvas dependency
-    pkgs.pixman
-    pkgs.cairo.dev
-    pkgs.pango.dev
+    pixman
+    cairo.dev
+    pango.dev
     # End of dependencies for canvas dependency
   ];
   npmBuildScript = "native:build";
@@ -87,7 +96,7 @@ buildNpmPackage {
 
   meta =
     let
-      inherit (pkgs.lib) majorMinor licenses platforms;
+      inherit (lib) majorMinor licenses platforms;
     in
     {
       homepage = "https://parsec.cloud/";
