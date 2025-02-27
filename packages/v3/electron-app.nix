@@ -1,25 +1,36 @@
-{ pkgs, src, client-build, libparsec, ... }:
+{
+  src,
+  native-client-build,
+  libparsec-node,
+  electron_32,
+  buildNpmPackage,
+  wrapGAppsHook,
+  makeWrapper,
+  patchelf,
+}:
 
 let
-  pkgVersion = libparsec.version;
-  pkgMajor = pkgs.lib.versions.major pkgVersion;
+  pkgVersion = libparsec-node.version;
   binName = "parsec";
-  electron = pkgs.electron_32;
+  electron = electron_32;
 in
-pkgs.buildNpmPackage {
+buildNpmPackage {
   pname = "parsec-cloud";
   version = pkgVersion;
-  outputs = [ "out" "icon" ];
+  outputs = [
+    "out"
+    "icon"
+  ];
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-ST5i20TCEWVu2np/L99sD4ntEqBfhQqWaRWZBF95IJo=";
+  npmDepsHash = "sha256-7tyAUaWWN2xKyd0KVxm4bsaqZF3UQGys1+rN6X2OkOw=";
 
   configurePhase = ''
     mkdir -pv build/{,generated-ts/}src app
-    install -v -p -m 444 ${libparsec.typing}/libparsec.d.ts build/generated-ts/src/libparsec.d.ts
-    install -v -p -m 555 ${libparsec}/libparsec.node build/src/libparsec.node
-    cp -ra ${client-build}/. app
+    install -v -p -m 444 ${libparsec-node.typing}/libparsec.d.ts build/generated-ts/src/libparsec.d.ts
+    install -v -p -m 555 ${libparsec-node}/libparsec.node build/src/libparsec.node
+    cp -ra ${native-client-build}/. app
   '';
 
   # prevent electron download from electron in package.json
@@ -52,10 +63,14 @@ pkgs.buildNpmPackage {
     cp -rva assets/icon.png $icon
   '';
 
-  nativeBuildInputs = [ pkgs.wrapGAppsHook pkgs.makeWrapper pkgs.patchelf ];
+  nativeBuildInputs = [
+    wrapGAppsHook
+    makeWrapper
+    patchelf
+  ];
   dontWrapGApps = true;
 
-  meta = libparsec.meta // {
+  meta = libparsec-node.meta // {
     mainProgram = binName;
     description = "Open source Dropbox-like file sharing with full client encryption !";
   };

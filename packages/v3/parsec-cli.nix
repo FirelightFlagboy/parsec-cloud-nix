@@ -1,13 +1,18 @@
 {
-  pkgs,
+  makeRustPlatform,
   version,
   src,
   rust-toolchain,
   system,
-  ...
+  lib,
+  pkg-config,
+  openssl,
+  sqlite,
+  dbus,
+  fuse3,
 }:
 
-(pkgs.makeRustPlatform {
+(makeRustPlatform {
   cargo = rust-toolchain;
   rustc = rust-toolchain;
 }).buildRustPackage
@@ -17,12 +22,12 @@
 
     cargoLock.lockFile = src + "/Cargo.lock";
 
-    nativeBuildInputs = [ pkgs.pkg-config ];
+    nativeBuildInputs = [ pkg-config ];
     buildInputs = [
-      pkgs.openssl.dev
-      pkgs.sqlite.dev
-      pkgs.dbus.dev
-      pkgs.fuse3.dev
+      openssl.dev
+      sqlite.dev
+      dbus.dev
+      fuse3.dev
     ];
 
     buildAndTestSubdir = "cli";
@@ -31,7 +36,7 @@
 
     meta =
       let
-        inherit (pkgs.lib) majorMinor licenses;
+        inherit (lib) majorMinor licenses;
       in
       {
         homepage = "https://parsec.cloud/";

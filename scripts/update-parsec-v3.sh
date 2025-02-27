@@ -41,14 +41,22 @@ mkdir -p $TMP_DIR
 COMMIT_REV=$(git -C $TMP_DIR/parsec-cloud rev-parse HEAD)
 
 COMMIT_ARCHIVE_SHA256=$(nix-prefetch-url --unpack https://github.com/$OWNER/$REPO/archive/$COMMIT_REV.tar.gz)
+
+PATCH_CMD="patch --strip=1 --input $ROOTDIR/packages/v3/patches/use-cdn-instead-of-vendored-xlsx.patch --dir $TMP_DIR/parsec-cloud"
+
+# Check if patch is alraedy applied by trying to revert it
+if ! $PATCH_CMD --force --dry-run --reverse; then
+    $PATCH_CMD
+fi
+
 CLIENT_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/package-lock.json)
 ELECTRON_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/electron/package-lock.json)
 
 TMP_FILES+=("$ROOTDIR/flake.nix.tmp")
 sed \
-    -e "70{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
-    -e "73{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
-    -e "75{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
+    -e "76{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
+    -e "79{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
+    -e "81{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
     $ROOTDIR/flake.nix > $ROOTDIR/flake.nix.tmp
 
 mv $ROOTDIR/flake.nix.tmp $ROOTDIR/flake.nix
