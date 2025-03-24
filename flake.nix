@@ -15,7 +15,6 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       fenix,
       ...
@@ -41,10 +40,7 @@
 
       rust-toolchain = fenix.packages.${system}.stable.toolchain;
 
-      poetry2nix = import inputs.poetry2nix {
-        inherit pkgs;
-      };
-      # A prelease is denotted if version contain a hyphen.
+      # A pre-release is denoted if version contain a hyphen.
       isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
     in
     {
@@ -53,25 +49,6 @@
       packages.${system} =
         let
           parsec-cloud = {
-            v2 =
-              let
-                version = "2.17.0";
-                commit_sha256 = "1qaip52mmgfw6fqzrblzgxf4bbj19c5xl5carcn00q9a36y2mpvc";
-                callPackage = pkgs.lib.callPackageWith (pkgs // { inherit version; });
-              in
-              rec {
-                src = pkgs.fetchFromGitHub {
-                  owner = "Scille";
-                  repo = "parsec-cloud";
-                  rev = "v${version}";
-                  sha256 = commit_sha256;
-                };
-                patched-src = callPackage packages/v2/patched-src { inherit src; };
-                client = callPackage packages/v2/client.nix {
-                  inherit poetry2nix;
-                  src = patched-src;
-                };
-              };
             v3 =
               let
                 version = "3.3.2";
@@ -100,9 +77,6 @@
           };
         in
         {
-          parsec-cloud-v2-client = parsec-cloud.v2.client;
-          parsec-cloud-v2-src = parsec-cloud.v2.patched-src;
-
           parsec-cloud-v3-node-lib = parsec-cloud.v3.libparsec-node;
           parsec-cloud-v3-native-client-build = parsec-cloud.v3.native-client-build;
           parsec-cloud-v3-client = parsec-cloud.v3.client;
@@ -114,7 +88,6 @@
 
       homeManagerModules = rec {
         parsec-cloud = {
-          v2 = import packages/v2/home-manager-module.nix inputs.self;
           v3 = import packages/v3/home-manager-module.nix inputs.self;
         };
         default = parsec-cloud.v3;
