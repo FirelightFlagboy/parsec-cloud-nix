@@ -1,17 +1,17 @@
 diff --git a/client/package-lock.json b/client/package-lock.json
-index 621c534..12d7267 100644
+index 17e0cdc..34bde63 100644
 --- a/client/package-lock.json
 +++ b/client/package-lock.json
-@@ -38,7 +38,7 @@
-                 "vue": "^3.3.8",
-                 "vue-i18n": "^9.14.2",
-                 "vue-router": "^4.2.5",
+@@ -39,7 +39,7 @@
+                 "vue": "^3.5.13",
+                 "vue-i18n": "^11.1.2",
+                 "vue-router": "^4.5.0",
 -                "xlsx": "file:vendor/xlsx-0.20.3.tgz"
 +                "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
              },
              "devDependencies": {
                  "@capacitor/cli": "^5.6.0",
-@@ -11529,7 +11529,7 @@
+@@ -12273,7 +12273,7 @@
          },
          "node_modules/xlsx": {
              "version": "0.20.3",
@@ -21,13 +21,13 @@ index 621c534..12d7267 100644
              "bin": {
                  "xlsx": "bin/xlsx.njs"
 diff --git a/client/package.json b/client/package.json
-index f74a358..76722d4 100644
+index 40461e1..aacecfb 100644
 --- a/client/package.json
 +++ b/client/package.json
-@@ -61,7 +61,7 @@
-         "vue": "^3.3.8",
-         "vue-i18n": "^9.14.2",
-         "vue-router": "^4.2.5",
+@@ -64,7 +64,7 @@
+         "vue": "^3.5.13",
+         "vue-i18n": "^11.1.2",
+         "vue-router": "^4.5.0",
 -        "xlsx": "file:vendor/xlsx-0.20.3.tgz"
 +        "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
      },
