@@ -24,7 +24,8 @@ buildNpmPackage {
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-Sej5QVD2aC1w4SBKLm8Dzxp28vJLTULgwuMeMos7rW0=";
+  npmDepsHash = "sha256-qxTnNwlAPVCuGkNzpTj/Xpa7Y5z+fTeXNLbWf5Gm+aw=";
+  makeCacheWritable = true;
 
   configurePhase = ''
     mkdir -pv build/{,generated-ts/}src app

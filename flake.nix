@@ -51,22 +51,41 @@
           parsec-cloud = {
             v3 =
               let
-                version = "3.3.2";
+                version = "3.4.0";
                 # Currently parsec-cloud only provide a nightly release for v3 which change each day.
                 # So fixing the commit_rev to stay on the same version.
-                commit_rev = "ea1fca30af6dc22bccd06c5cf9658c23e73eb179";
+                commit_rev = "8e4c33b8d309c829e121b3ce0601c7c7bbedb6d7";
                 # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-                commit_sha256 = "1jzx2dhjs4pv6v8xfl7q5w2d2l64nz8wgzglpgwj27yx946ph9x2";
+                commit_sha256 = "1vjckzzghr8qaacy4psprwbz2zpxybsa5vw60b9j8cbakx7wnq4c";
                 callPackage = pkgs.lib.callPackageWith (pkgs // package);
                 package = {
                   inherit version rust-toolchain system;
                   isPrerelease = isPrerelease version;
-                  src = pkgs.fetchFromGitHub {
-                    owner = "Scille";
-                    repo = "parsec-cloud";
-                    rev = commit_rev;
-                    sha256 = commit_sha256;
-                  };
+                  src = callPackage (
+                    {
+                      stdenvNoCC,
+                      fetchFromGitHub,
+                      version,
+                    }:
+                    stdenvNoCC.mkDerivation {
+                      inherit version;
+                      pname = "parsec-cloud-src";
+                      src = fetchFromGitHub {
+                        owner = "Scille";
+                        repo = "parsec-cloud";
+                        rev = commit_rev;
+                        sha256 = commit_sha256;
+                      };
+                      patches = [
+                        ./packages/v3/patches/remove-cargo-patch-for-web-crate.diff
+                        ./packages/v3/patches/use-cdn-instead-of-vendored-xlsx.patch
+                      ];
+                      installPhase = # shell
+                        ''
+                          cp -a . "$out"
+                        '';
+                    }
+                  ) { };
                   libparsec-node = callPackage packages/v3/libparsec-node.nix { };
                   native-client-build = callPackage packages/v3/native-build.nix { };
                   client = callPackage packages/v3/electron-app.nix { };

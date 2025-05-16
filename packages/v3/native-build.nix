@@ -17,19 +17,6 @@
 }:
 
 let
-  patchedSrc = stdenvNoCC.mkDerivation {
-    inherit version src;
-    pname = "parsec-cloud-client-src";
-    patches = [
-      ./patches/use-cdn-instead-of-vendored-xlsx.patch
-    ];
-    patchFlags = "--strip=1 --verbose";
-    installPhase = # shell
-      ''
-        mkdir -p "$out"
-        cp -ra client "$out"
-      '';
-  };
   nodejs = nodejs_20;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
@@ -53,9 +40,9 @@ buildNpmPackage {
   inherit version;
   pname = "parsec-native-build";
 
-  src = "${patchedSrc}/client";
+  src = "${src}/client";
 
-  npmDepsHash = "sha256-FQQ5ReRBi9x8AMga85T/3b5735yR5UwGWfZJOSBOwSw=";
+  npmDepsHash = "sha256-zaKiTXks2dftbxQrFkeEwEmQnlsTd9E2ly5BdP1a+bE=";
 
   makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
 
