@@ -2,7 +2,7 @@
   src,
   native-client-build,
   libparsec-node,
-  electron_34,
+  electron_36,
   buildNpmPackage,
   wrapGAppsHook,
   makeWrapper,
@@ -12,7 +12,7 @@
 let
   pkgVersion = libparsec-node.version;
   binName = "parsec";
-  electron = electron_34;
+  electron = electron_36;
 in
 buildNpmPackage {
   pname = "parsec-cloud";
