@@ -38,7 +38,7 @@
         };
       };
 
-      rust-toolchain = fenix.packages.${system}.stable.toolchain;
+      rust-toolchain = fenix.packages.${system}.stable.minimalToolchain;
 
       # A pre-release is denoted if version contain a hyphen.
       isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
