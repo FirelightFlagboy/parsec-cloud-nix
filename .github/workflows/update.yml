@@ -76,6 +76,9 @@ jobs:
           if ! gh pr list --head update-flake-lock | grep -i open; then
             echo "No open PR for branch update-flake-lock, creating it..."
             gh pr create --fill
+          else
+            echo "PR already exist, updating body + title"
+            gh pr edit --body "$(git log --format=%b -n 1 HEAD)" --title "$(git log --format=%s -n 1 HEAD)"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
