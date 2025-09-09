@@ -40,7 +40,7 @@ jobs:
 
       - name: Increase disk available size by removing pre-installed stuff
         uses: FirelightFlagboy/gh-runner-free-disk-space@e7fe30fd56000b3369e15bf3e7d40316537410e2
-        timeout-minutes: 3
+        timeout-minutes: 5
 
       - name: Checkout repository
         uses: actions/checkout@v4
