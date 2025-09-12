@@ -44,23 +44,28 @@ COMMIT_ARCHIVE_SHA256=$(nix-prefetch-url --unpack https://github.com/$OWNER/$REP
 
 PATCH_CMD="patch --strip=1 --input $ROOTDIR/packages/v3/patches/use-cdn-instead-of-vendored-xlsx.patch --dir $TMP_DIR/parsec-cloud"
 
-# Check if patch is alraedy applied by trying to revert it
+# Check if patch is already applied by trying to revert it
 if ! $PATCH_CMD --force --dry-run --reverse; then
+    echo "Applying patch"
     $PATCH_CMD
+else
+    echo "Patch already applied"
 fi
 
-CLIENT_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/package-lock.json)
-ELECTRON_NPM_DEPS_HASH=$(prefetch-npm-deps $TMP_DIR/parsec-cloud/client/electron/package-lock.json)
+CLIENT_NPM_DEPS_HASH=$(nix run nixpkgs#prefetch-npm-deps $TMP_DIR/parsec-cloud/client/package-lock.json)
+ELECTRON_NPM_DEPS_HASH=$(nix run nixpkgs#prefetch-npm-deps $TMP_DIR/parsec-cloud/client/electron/package-lock.json)
 
 TMP_FILES+=("$ROOTDIR/flake.nix.tmp")
+echo "Updating version & commit revision in flake file"
 sed \
-    -e "77{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
-    -e "80{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
-    -e "82{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
+    -e "54{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
+    -e "57{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
+    -e "59{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
     $ROOTDIR/flake.nix > $ROOTDIR/flake.nix.tmp
 
 mv $ROOTDIR/flake.nix.tmp $ROOTDIR/flake.nix
 
+echo "Updating Npm dependencies hash"
 sed -i \
     -e "s;npmDepsHash = \".*\";npmDepsHash = \"${CLIENT_NPM_DEPS_HASH}\";" \
     $ROOTDIR/packages/v3/native-build.nix
