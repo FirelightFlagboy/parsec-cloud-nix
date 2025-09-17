@@ -41,7 +41,7 @@
       rust-toolchain = fenix.packages.${system}.stable.minimalToolchain;
 
       # A pre-release is denoted if version contain a hyphen.
-      isPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
+      isVersionPrerelease = version: pkgs.lib.strings.hasInfix "-" version;
     in
     {
       formatter.${system} = pkgs.nixpkgs-fmt;
@@ -51,41 +51,19 @@
           parsec-cloud = {
             v3 =
               let
-                version = "3.4.0";
-                # Currently parsec-cloud only provide a nightly release for v3 which change each day.
-                # So fixing the commit_rev to stay on the same version.
-                commit_rev = "8e4c33b8d309c829e121b3ce0601c7c7bbedb6d7";
-                # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-                commit_sha256 = "1vjckzzghr8qaacy4psprwbz2zpxybsa5vw60b9j8cbakx7wnq4c";
                 callPackage = pkgs.lib.callPackageWith (pkgs // package);
-                package = {
-                  inherit version rust-toolchain system;
-                  isPrerelease = isPrerelease version;
-                  src = callPackage (
-                    {
-                      stdenvNoCC,
-                      fetchFromGitHub,
-                      version,
-                    }:
-                    stdenvNoCC.mkDerivation {
-                      inherit version;
-                      pname = "parsec-cloud-src";
-                      src = fetchFromGitHub {
-                        owner = "Scille";
-                        repo = "parsec-cloud";
-                        rev = commit_rev;
-                        sha256 = commit_sha256;
-                      };
-                      patches = [
-                        ./packages/v3/patches/remove-cargo-patch-for-web-crate.diff
-                        ./packages/v3/patches/use-cdn-instead-of-vendored-xlsx.patch
-                      ];
-                      installPhase = # shell
-                        ''
-                          cp -a . "$out"
-                        '';
-                    }
-                  ) { };
+                package = rec {
+                  version = "3.5.0-rc.0";
+                  # Currently parsec-cloud only provide a nightly release for v3 which change each day.
+                  # So fixing the commit_rev to stay on the same version.
+                  commit_rev = "a931d337b35d46a682d65f86743eb0bce953e0b0";
+                  # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
+                  commit_sha256 = "0cxc0maq5l71clij6si232kwg4b6fnzz8nnb06w0kyjg9r6xm8yc";
+
+                  inherit rust-toolchain system;
+                  isPrerelease = isVersionPrerelease version;
+
+                  src = callPackage packages/v3/source.nix { };
                   libparsec-node = callPackage packages/v3/libparsec-node.nix { };
                   native-client-build = callPackage packages/v3/native-build.nix { };
                   client = callPackage packages/v3/electron-app.nix { };
@@ -96,6 +74,7 @@
           };
         in
         {
+          parsec-cloud-v3-src = parsec-cloud.v3.src;
           parsec-cloud-v3-node-lib = parsec-cloud.v3.libparsec-node;
           parsec-cloud-v3-native-client-build = parsec-cloud.v3.native-client-build;
           parsec-cloud-v3-client = parsec-cloud.v3.client;
