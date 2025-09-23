@@ -1,6 +1,5 @@
 set -eu -o pipefail
 
-
 # Allow the user to overwrite `SCRIPTDIR` by exporting it beforehand.
 SCRIPTDIR=${SCRIPTDIR:=$(dirname "$(realpath -s "$0")")}
 # Allow the user to overwrite `ROOTDIR` by exporting it beforehand.
@@ -58,10 +57,10 @@ ELECTRON_NPM_DEPS_HASH=$(nix run nixpkgs#prefetch-npm-deps $TMP_DIR/parsec-cloud
 TMP_FILES+=("$ROOTDIR/flake.nix.tmp")
 echo "Updating version & commit revision in flake file"
 sed \
-    -e "54{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
-    -e "57{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
-    -e "59{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
-    $ROOTDIR/flake.nix > $ROOTDIR/flake.nix.tmp
+    -e "56{s/version = \".*\";/version = \"${VERSION}\";/;t ok; q 1;:ok}" \
+    -e "59{s/commit_rev = \".*\";/commit_rev = \"${COMMIT_REV}\";/;t ok; q 1;:ok}" \
+    -e "61{s/commit_sha256 = \".*\";/commit_sha256 = \"${COMMIT_ARCHIVE_SHA256}\";/;t ok; q 1;:ok}" \
+    $ROOTDIR/flake.nix >$ROOTDIR/flake.nix.tmp
 
 mv $ROOTDIR/flake.nix.tmp $ROOTDIR/flake.nix
 
