@@ -7,8 +7,10 @@
   openssl,
   sqlite,
   fuse3,
+  autoPatchelfHook,
   dbus,
   pkg-config,
+  libgcc,
   lib,
 }:
 
@@ -39,17 +41,21 @@
         typescript_def_path = "bindings/electron/src/index.d.ts";
       in
       ''
-        install -v -m 555 -p $out/lib/${artifact_name} $out/libparsec.node
+        ln -s $out/lib/${artifact_name} $out/libparsec.node
         install -v --directory $typing
         install -v -m 444 -p $src/${typescript_def_path} $typing/libparsec.d.ts
       '';
 
-    nativeBuildInputs = [ pkg-config ];
+    nativeBuildInputs = [
+      pkg-config
+      autoPatchelfHook
+    ];
     buildInputs = [
       openssl
       sqlite
-      fuse3
+      fuse3.dev
       dbus
+      libgcc
     ];
 
     meta =
