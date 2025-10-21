@@ -19,7 +19,7 @@ stdenvNoCC.mkDerivation {
   };
   patches = [
     ./patches/use-cdn-instead-of-vendored-xlsx.patch
-    ./patches/use-libsodium-0.2-and-remove-patch-for-web-crates.patch
+    # ./patches/use-libsodium-0.2-and-remove-patch-for-web-crates.patch
   ];
   installPhase = # shell
     ''
