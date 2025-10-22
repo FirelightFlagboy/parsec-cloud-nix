@@ -1,15 +1,17 @@
 {
-  makeRustPlatform,
-  version,
-  src,
-  rust-toolchain,
-  system,
-  lib,
-  pkg-config,
-  openssl,
-  sqlite,
+  autoPatchelfHook,
   dbus,
   fuse3,
+  lib,
+  libgcc,
+  makeRustPlatform,
+  openssl,
+  pkg-config,
+  rust-toolchain,
+  sqlite,
+  src,
+  system,
+  version,
 }:
 
 (makeRustPlatform {
@@ -22,12 +24,16 @@
 
     cargoLock.lockFile = src + "/Cargo.lock";
 
-    nativeBuildInputs = [ pkg-config ];
+    nativeBuildInputs = [
+      pkg-config
+      autoPatchelfHook
+    ];
     buildInputs = [
-      openssl.dev
-      sqlite.dev
-      dbus.dev
+      openssl
+      sqlite
+      dbus
       fuse3.dev
+      libgcc
     ];
 
     buildAndTestSubdir = "cli";
