@@ -53,12 +53,12 @@
               let
                 callPackage = pkgs.lib.callPackageWith (pkgs // package);
                 package = rec {
-                  version = "3.7.0-rc.2";
+                  version = "3.7.0";
                   # Currently parsec-cloud only provide a nightly release for v3 which change each day.
                   # So fixing the commit_rev to stay on the same version.
-                  commit_rev = "3e62f9c2e7beefd78780fb365cfd64f57e2a84fe";
+                  commit_rev = "5ca6effd91fb8a3ca4d85fac0802f41767346662";
                   # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-                  commit_sha256 = "131cas1sb87xdczxlp58wlrp5dbqfxc0azcv0p5j4zmcsmpwglxz";
+                  commit_sha256 = "1kjcx0zh34xaw5bdya06zw01gpf7lfrc0v1xzh6ijqp9xgqwvsr6";
 
                   inherit rust-toolchain system;
                   isPrerelease = isVersionPrerelease version;
