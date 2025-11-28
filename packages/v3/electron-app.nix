@@ -24,7 +24,7 @@ buildNpmPackage {
 
   src = "${src}/client/electron";
 
-  npmDepsHash = "sha256-jHejx7dACoZdtdUzJ8nCqZQdErqTjbPWFiL3y53qzYo=";
+  npmDepsHash = "sha256-FWwfa8PvRz7wpAXCW+M5m7V4bcolaoi9m/THjODS1Lo=";
   makeCacheWritable = true;
 
   configurePhase = ''
