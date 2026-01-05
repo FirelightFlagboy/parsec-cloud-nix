@@ -49,12 +49,21 @@
       packages.${system} =
         let
           makeDeprecatedPkg =
-            parsec: attr: builtins.warn "Deprecated: Use `parsec-cloud.${attr}` instead" parsec.${attr};
+            parsec: attr: builtins.warn "Deprecated: Use `parsec-cloud.v3.${attr}` instead" parsec.v3.${attr};
         in
         rec {
-          parsec-cloud = pkgs.callPackage packages/v3 {
-            inherit system isVersionPrerelease rust-toolchain;
-          };
+          parsec-cloud = pkgs.lib.makeScope pkgs.newScope (self: {
+            v3 = self.callPackage packages/v3 {
+              inherit system isVersionPrerelease rust-toolchain;
+            };
+            inherit (self.v3)
+              src
+              libparsec-node
+              native-client-build
+              client
+              cli
+              ;
+          });
 
           parsec-cloud-v3-src = makeDeprecatedPkg parsec-cloud "src";
           parsec-cloud-v3-node-lib = makeDeprecatedPkg parsec-cloud "libparsec-node";
