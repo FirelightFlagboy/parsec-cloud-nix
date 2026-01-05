@@ -7,6 +7,7 @@
   wrapGAppsHook3,
   makeWrapper,
   patchelf,
+  capacitor-electron,
 }:
 
 let
@@ -39,7 +40,15 @@ buildNpmPackage {
     ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
   };
 
+  preBuild = ''
+    # Patch '@capacitor-community/electron' not being build
+    rm -rf node_modules/@capacitor-community/electron
+    ln -s ${capacitor-electron}/lib/node_modules/@capacitor-community/electron node_modules/@capacitor-community/electron
+  '';
+
   buildPhase = ''
+    runHook preBuild
+
     npx tsc
     node package.js --mode prod --platform linux --export > electron-builder-config.json
     npm exec electron-builder -- \
