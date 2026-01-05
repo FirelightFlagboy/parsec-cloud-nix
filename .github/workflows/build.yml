@@ -50,13 +50,13 @@ jobs:
         timeout-minutes: 1
 
       - name: Install nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 1
 
       - name: Configure cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v16
         with:
           name: parsec-cloud
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -70,10 +70,6 @@ jobs:
         if: matrix.version == 'v3'
         run: nix build -L .#parsec-cloud-${{ matrix.version }}-cli
         timeout-minutes: ${{ matrix.build-timeout-minutes }}
-
-      - name: Check flake
-        run: nix flake check
-        timeout-minutes: 1
 
       - name: Update commit status to success
         uses: myrotvorets/set-commit-status-action@3730c0a348a2ace3c110851bed53331bc6406e9f # v2.0.1

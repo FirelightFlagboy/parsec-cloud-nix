@@ -1,11 +1,9 @@
 {
-  stdenvNoCC,
-  fetchFromGitHub,
-  version,
   commit_rev,
   commit_sha256,
-  fetchpatch,
-  lib,
+  fetchFromGitHub,
+  stdenvNoCC,
+  version,
 }:
 
 stdenvNoCC.mkDerivation {
@@ -20,8 +18,5 @@ stdenvNoCC.mkDerivation {
   patches = [
     ./patches/use-cdn-instead-of-vendored-xlsx.patch
   ];
-  installPhase = # shell
-    ''
-      cp -a . "$out"
-    '';
+  installPhase = ''cp -a . "$out"'';
 }
