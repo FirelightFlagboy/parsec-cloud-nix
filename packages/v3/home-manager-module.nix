@@ -7,7 +7,7 @@ self:
 }:
 
 let
-  clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client;
+  clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud.client;
 in
 {
   options.programs.parsec-cloud-v3-client =
@@ -21,7 +21,7 @@ in
         type = types.package;
         default = clientDefaultPackage;
         defaultText = lib.literalExpression ''
-          parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud-v3-client
+          parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud.client
         '';
         description = ''
           Parsec-cloud client package to use. Defaults to the one provided by the flake.
