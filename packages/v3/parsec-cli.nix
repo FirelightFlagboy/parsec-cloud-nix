@@ -11,9 +11,11 @@
   sqlite,
   src,
   system,
-  version,
 }:
 
+let
+  version = src.version;
+in
 (makeRustPlatform {
   cargo = rust-toolchain;
   rustc = rust-toolchain;

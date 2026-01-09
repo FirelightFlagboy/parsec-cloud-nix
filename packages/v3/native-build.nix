@@ -1,8 +1,6 @@
 {
-  stdenvNoCC,
   src,
-  version,
-  isPrerelease,
+  isVersionPrerelease,
   buildNpmPackage,
   nodejs_20,
   makeSetupHook,
@@ -17,7 +15,9 @@
 }:
 
 let
+  version = src.version;
   nodejs = nodejs_20;
+  isPrerelease = isVersionPrerelease src.version;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
     name = "npm-config-hook";
