@@ -1,6 +1,7 @@
 {
   fetchFromGitHub,
   stdenvNoCC,
+  nix-update-script,
 }:
 
 stdenvNoCC.mkDerivation rec {
@@ -17,4 +18,5 @@ stdenvNoCC.mkDerivation rec {
     ./patches/use-cdn-instead-of-vendored-xlsx.patch
   ];
   installPhase = ''cp -a . "$out"'';
+  passthru.updateScript = nix-update-script { extraArgs = [ "--flake" ]; };
 }
