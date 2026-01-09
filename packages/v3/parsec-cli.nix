@@ -5,6 +5,7 @@
   lib,
   libgcc,
   makeRustPlatform,
+  nix-update-script,
   openssl,
   pkg-config,
   rust-toolchain,
@@ -42,6 +43,7 @@ in
     # Require running the `testbed` server to run the tests (+ access to `parsec-cli`).
     doCheck = false;
 
+    passthru.updateScript = nix-update-script { extraArgs = [ "--no-src" ]; };
     meta =
       let
         inherit (lib) majorMinor licenses;
