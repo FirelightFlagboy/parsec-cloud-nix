@@ -1,17 +1,18 @@
 {
-  src,
-  isVersionPrerelease,
   buildNpmPackage,
-  nodejs_20,
-  makeSetupHook,
-  diffutils,
-  jq,
-  prefetch-npm-deps,
-  lib,
-  pkg-config,
-  pixman,
   cairo,
+  diffutils,
+  isVersionPrerelease,
+  jq,
+  lib,
+  makeSetupHook,
+  nix-update-script,
+  nodejs_20,
   pango,
+  pixman,
+  pkg-config,
+  prefetch-npm-deps,
+  src,
 }:
 
 let
@@ -80,6 +81,14 @@ buildNpmPackage {
     mkdir -p $out
     cp -rva dist/{index.html,assets} $out
   '';
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--flake"
+      "--url=${src.src.url}"
+      "--no-src" # No `src` to update, only `npmDepsHash`
+    ];
+  };
 
   meta =
     let
