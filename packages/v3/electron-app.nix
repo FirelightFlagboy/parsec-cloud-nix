@@ -8,6 +8,7 @@
   makeWrapper,
   patchelf,
   capacitor-electron,
+  nix-update-script,
 }:
 
 let
@@ -79,6 +80,14 @@ buildNpmPackage {
     patchelf
   ];
   dontWrapGApps = true;
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--flake"
+      "--url=${src.src.url}"
+      "--no-src" # No src to update, only npmDepsHash
+    ];
+  };
 
   meta = libparsec-node.meta // {
     mainProgram = binName;

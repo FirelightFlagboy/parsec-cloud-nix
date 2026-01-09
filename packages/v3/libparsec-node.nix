@@ -1,6 +1,5 @@
 {
   makeRustPlatform,
-  version,
   src,
   rust-toolchain,
   system,
@@ -18,8 +17,9 @@
   cargo = rust-toolchain;
   rustc = rust-toolchain;
 }).buildRustPackage
-  {
-    inherit version src;
+  rec {
+    inherit src;
+    version = src.version;
     name = "libparsec-node-module";
     outputs = [
       "out"

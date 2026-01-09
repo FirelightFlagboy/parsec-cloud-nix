@@ -1,22 +1,22 @@
 {
-  commit_rev,
-  commit_sha256,
   fetchFromGitHub,
   stdenvNoCC,
-  version,
+  nix-update-script,
 }:
 
-stdenvNoCC.mkDerivation {
-  inherit version;
+stdenvNoCC.mkDerivation rec {
   pname = "parsec-cloud-src";
+  version = "3.7.0";
   src = fetchFromGitHub {
     owner = "Scille";
     repo = "parsec-cloud";
-    rev = commit_rev;
-    sha256 = commit_sha256;
+    tag = "v${version}";
+    # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
+    sha256 = "1kjcx0zh34xaw5bdya06zw01gpf7lfrc0v1xzh6ijqp9xgqwvsr6";
   };
   patches = [
     ./patches/use-cdn-instead-of-vendored-xlsx.patch
   ];
   installPhase = ''cp -a . "$out"'';
+  passthru.updateScript = nix-update-script { extraArgs = [ "--flake" ]; };
 }
