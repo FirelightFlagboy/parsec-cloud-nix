@@ -16,6 +16,7 @@ stdenvNoCC.mkDerivation rec {
   };
   patches = [
     ./patches/use-cdn-instead-of-vendored-xlsx.patch
+    ./patches/add-tslib-dependency-for-electron.patch
   ];
   installPhase = ''cp -a . "$out"'';
   passthru.updateScript = nix-update-script { extraArgs = [ "--flake" ]; };
