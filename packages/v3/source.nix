@@ -6,17 +6,15 @@
 
 stdenvNoCC.mkDerivation rec {
   pname = "parsec-cloud-src";
-  version = "3.7.0";
+  version = "3.8.0";
   src = fetchFromGitHub {
     owner = "Scille";
     repo = "parsec-cloud";
     tag = "v${version}";
     # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-    sha256 = "1kjcx0zh34xaw5bdya06zw01gpf7lfrc0v1xzh6ijqp9xgqwvsr6";
+    sha256 = "sha256-7zz38Muuoh9zU7g7LQpJxaPh4Vk5XF4qZ6FZvDnY7HM=";
   };
   patches = [
-    ./patches/use-cdn-instead-of-vendored-xlsx.patch
-    ./patches/add-tslib-dependency-for-electron.patch
   ];
   installPhase = ''cp -a . "$out"'';
   passthru.updateScript = nix-update-script { extraArgs = [ "--flake" ]; };

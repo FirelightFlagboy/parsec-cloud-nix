@@ -43,7 +43,14 @@ in
     # Require running the `testbed` server to run the tests (+ access to `parsec-cli`).
     doCheck = false;
 
-    passthru.updateScript = nix-update-script { extraArgs = [ "--no-src" ]; };
+    passthru.updateScript = nix-update-script {
+      extraArgs = [
+        "--flake"
+        "--url=${src.src.url}"
+        "--no-src"
+      ];
+    };
+
     meta =
       let
         inherit (lib) majorMinor licenses;
