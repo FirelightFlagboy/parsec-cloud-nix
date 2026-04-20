@@ -12,7 +12,7 @@ stdenvNoCC.mkDerivation rec {
     repo = "parsec-cloud";
     tag = "v${version}";
     # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-    sha256 = "sha256-vcZ/zPkpw8x+K/AGVxgmYxjoSKtzxVBDAk5P1nBcSSA=";
+    hash = "sha256-vcZ/zPkpw8x+K/AGVxgmYxjoSKtzxVBDAk5P1nBcSSA=";
   };
   patches = [
   ];
