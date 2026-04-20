@@ -11,7 +11,7 @@ buildNpmPackage {
     owner = "Scille";
     repo = "capacitor-electron";
     rev = "415b25cb411ac3957a3d5d25d2a68e5f350161cb";
-    sha256 = "sha256-CdON+bWmVeVHVUjBcq3dnWPQL3YB2dGR2Of1R4lvlDA=";
+    hash = "sha256-CdON+bWmVeVHVUjBcq3dnWPQL3YB2dGR2Of1R4lvlDA=";
   };
 
   npmDepsHash = "sha256-IFlElWNT5SWid08kYiFUZ3eox7lfpbvAZrHPvjSiWRE=";
