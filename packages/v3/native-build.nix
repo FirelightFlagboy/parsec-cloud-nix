@@ -7,17 +7,18 @@
   lib,
   makeSetupHook,
   nix-update-script,
-  nodejs_20,
+  nodejs_24,
   pango,
   pixman,
   pkg-config,
   prefetch-npm-deps,
   source,
+  megashark-lib,
 }:
 
 let
   version = source.version;
-  nodejs = nodejs_20;
+  nodejs = nodejs_24;
   isPrerelease = isVersionPrerelease source.version;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
@@ -58,6 +59,12 @@ buildNpmPackage {
         -e 's;node ./scripts/vite_build_for_native.cjs;${buildCmd};' \
         -i package.json
     '';
+
+  # Need to patch `megashark-lib` dep as it is missing transpiled files
+  preBuild = ''
+    ln -sv ${megashark-lib}/lib/node_modules/megashark-lib/dist node_modules/megashark-lib/dist
+  '';
+
   npmConfigHook = npmConfigHook;
 
   env = {
