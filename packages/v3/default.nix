@@ -9,7 +9,7 @@
 lib.makeScope newScope (self: {
   inherit rust-toolchain system;
 
-  src = self.callPackage ./source.nix { };
+  source = self.callPackage ./source.nix { };
   libparsec-node = self.callPackage ./libparsec-node.nix { };
   native-client-build = self.callPackage ./native-build.nix { inherit isVersionPrerelease; };
   capacitor-electron = self.callPackage ./capacitor-electron.nix { };

@@ -10,22 +10,23 @@
   pkg-config,
   rust-toolchain,
   sqlite,
-  src,
+  source,
   system,
 }:
 
 let
-  version = src.version;
+  version = source.version;
 in
 (makeRustPlatform {
   cargo = rust-toolchain;
   rustc = rust-toolchain;
 }).buildRustPackage
   {
-    inherit version src;
+    inherit version;
+    src = source;
     pname = "parsec-cli";
 
-    cargoLock.lockFile = src + "/Cargo.lock";
+    cargoLock.lockFile = source + "/Cargo.lock";
 
     nativeBuildInputs = [
       pkg-config
@@ -46,7 +47,7 @@ in
     passthru.updateScript = nix-update-script {
       extraArgs = [
         "--flake"
-        "--url=${src.src.url}"
+        "--url=${source.src.url}"
         "--no-src"
       ];
     };

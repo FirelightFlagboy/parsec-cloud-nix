@@ -12,13 +12,13 @@
   pixman,
   pkg-config,
   prefetch-npm-deps,
-  src,
+  source,
 }:
 
 let
-  version = src.version;
+  version = source.version;
   nodejs = nodejs_20;
-  isPrerelease = isVersionPrerelease src.version;
+  isPrerelease = isVersionPrerelease source.version;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
     name = "npm-config-hook";
@@ -41,7 +41,7 @@ buildNpmPackage {
   inherit version;
   pname = "parsec-native-build";
 
-  src = "${src}/client";
+  src = "${source}/client";
 
   npmDepsHash = "sha256-thZK6Wltxy20pH21pfusJGdF38o8qw4GB8Aol0Z0Og8=";
 
@@ -85,7 +85,7 @@ buildNpmPackage {
   passthru.updateScript = nix-update-script {
     extraArgs = [
       "--flake"
-      "--url=${src.src.url}"
+      "--url=${source.src.url}"
       "--no-src" # No `src` to update, only `npmDepsHash`
     ];
   };

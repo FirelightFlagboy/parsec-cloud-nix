@@ -6,8 +6,8 @@ SCRIPTDIR=${SCRIPTDIR:=$(dirname "$(realpath -s "$0")")}
 ROOTDIR=${ROOTDIR:=$(realpath -s "$SCRIPTDIR/..")}
 UPDATE_MODE=${1:-stable}
 
-nix run nixpkgs#nix-update -- --flake --version="$UPDATE_MODE" parsec-cloud.v3.src
-URL=$(nix eval .#parsec-cloud.v3.src.src.url --raw)
+nix run nixpkgs#nix-update -- --flake --version="$UPDATE_MODE" parsec-cloud.v3.source
+URL=$(nix eval .#parsec-cloud.v3.source.src.url --raw)
 
 function fail {
     local lc="$BASH_COMMAND" previous_rc=$?

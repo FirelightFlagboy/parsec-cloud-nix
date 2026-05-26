@@ -1,6 +1,6 @@
 {
   makeRustPlatform,
-  src,
+  source,
   rust-toolchain,
   system,
   openssl,
@@ -18,8 +18,8 @@
   rustc = rust-toolchain;
 }).buildRustPackage
   rec {
-    inherit src;
-    version = src.version;
+    src = source;
+    version = source.version;
     name = "libparsec-node-module";
     outputs = [
       "out"
@@ -30,7 +30,7 @@
     buildAndTestSubdir = "bindings/electron";
     cargoBuildFeatures = [ ];
 
-    cargoLock.lockFile = "${src}/Cargo.lock";
+    cargoLock.lockFile = "${source}/Cargo.lock";
 
     doCheck = false;
 
