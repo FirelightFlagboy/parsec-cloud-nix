@@ -7,18 +7,19 @@
   lib,
   makeSetupHook,
   nix-update-script,
-  nodejs_20,
+  nodejs_24,
   pango,
   pixman,
   pkg-config,
   prefetch-npm-deps,
-  src,
+  source,
+  megashark-lib,
 }:
 
 let
-  version = src.version;
-  nodejs = nodejs_20;
-  isPrerelease = isVersionPrerelease src.version;
+  version = source.version;
+  nodejs = nodejs_24;
+  isPrerelease = isVersionPrerelease source.version;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
     name = "npm-config-hook";
@@ -41,7 +42,7 @@ buildNpmPackage {
   inherit version;
   pname = "parsec-native-build";
 
-  src = "${src}/client";
+  src = "${source}/client";
 
   npmDepsHash = "sha256-thZK6Wltxy20pH21pfusJGdF38o8qw4GB8Aol0Z0Og8=";
 
@@ -58,6 +59,12 @@ buildNpmPackage {
         -e 's;node ./scripts/vite_build_for_native.cjs;${buildCmd};' \
         -i package.json
     '';
+
+  # Need to patch `megashark-lib` dep as it is missing transpiled files
+  preBuild = ''
+    ln -sv ${megashark-lib}/lib/node_modules/megashark-lib/dist node_modules/megashark-lib/dist
+  '';
+
   npmConfigHook = npmConfigHook;
 
   env = {
@@ -85,7 +92,7 @@ buildNpmPackage {
   passthru.updateScript = nix-update-script {
     extraArgs = [
       "--flake"
-      "--url=${src.src.url}"
+      "--url=${source.src.url}"
       "--no-src" # No `src` to update, only `npmDepsHash`
     ];
   };

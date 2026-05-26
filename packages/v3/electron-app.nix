@@ -1,5 +1,5 @@
 {
-  src,
+  source,
   native-client-build,
   libparsec-node,
   electron,
@@ -23,7 +23,7 @@ buildNpmPackage {
     "icon"
   ];
 
-  src = "${src}/client/electron";
+  src = "${source}/client/electron";
 
   npmDepsHash = "sha256-/Wctbuhs4yLSDWDi4XnxXmv7MaVqzhm2O0S0dJ1SNAs=";
   makeCacheWritable = true;
@@ -83,7 +83,7 @@ buildNpmPackage {
   passthru.updateScript = nix-update-script {
     extraArgs = [
       "--flake"
-      "--url=${src.src.url}"
+      "--url=${source.src.url}"
       "--no-src" # No src to update, only npmDepsHash
     ];
   };
