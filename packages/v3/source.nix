@@ -2,6 +2,7 @@
   fetchFromGitHub,
   stdenvNoCC,
   nix-update-script,
+  lib,
 }:
 
 stdenvNoCC.mkDerivation rec {
@@ -18,4 +19,12 @@ stdenvNoCC.mkDerivation rec {
   ];
   installPhase = ''cp -a . "$out"'';
   passthru.updateScript = nix-update-script { extraArgs = [ "--flake" ]; };
+  passthru.megashark-lib-rev = lib.pipe "${src}/client/package-lock.json" [
+    builtins.readFile
+    builtins.fromJSON
+    (lock: lock.packages."node_modules/megashark-lib".resolved)
+    (url: lib.splitString "\#" url)
+    builtins.tail
+    builtins.head
+  ];
 }

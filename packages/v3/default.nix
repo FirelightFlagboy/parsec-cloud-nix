@@ -15,4 +15,5 @@ lib.makeScope newScope (self: {
   capacitor-electron = self.callPackage ./capacitor-electron.nix { };
   client = self.callPackage ./electron-app.nix { };
   cli = self.callPackage ./parsec-cli.nix { };
+  megashark-lib = self.callPackage ./megashark-lib.nix { };
 })
