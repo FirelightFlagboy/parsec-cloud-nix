@@ -7,13 +7,13 @@
 
 stdenvNoCC.mkDerivation rec {
   pname = "parsec-cloud-src";
-  version = "3.8.1";
+  version = "3.9.0";
   src = fetchFromGitHub {
     owner = "Scille";
     repo = "parsec-cloud";
     tag = "v${version}";
     # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz`
-    hash = "sha256-vcZ/zPkpw8x+K/AGVxgmYxjoSKtzxVBDAk5P1nBcSSA=";
+    hash = "sha256-0SmdUiY8nLnBratNXlcEMvZCnRk7x+jL0RQfQS52OuE=";
   };
   patches = [
   ];
