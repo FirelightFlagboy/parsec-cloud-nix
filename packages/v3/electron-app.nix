@@ -7,7 +7,6 @@
   wrapGAppsHook3,
   makeWrapper,
   patchelf,
-  capacitor-electron,
   nix-update-script,
 }:
 
@@ -25,14 +24,27 @@ buildNpmPackage {
 
   src = "${source}/client/electron";
 
-  npmDepsHash = "sha256-/Wctbuhs4yLSDWDi4XnxXmv7MaVqzhm2O0S0dJ1SNAs=";
+  npmDepsHash = "sha256-hM0Gg5OAnp4KixyYf6FoZy+qL8m8+ZdxpAlFOcTUtjg=";
   makeCacheWritable = true;
 
+  # Need to put a console.log in stdout to prevent clutter during json export
+  patchPhase = ''
+    runHook prePatch
+
+    sed -i -e 's/console.log(`/console.warn(`/' package.cjs
+
+    runHook postPatch
+  '';
+
   configurePhase = ''
+    runHook preConfigure
+
     mkdir -pv build/{,generated-ts/}src app
     install -v -p -m 444 ${libparsec-node.typing}/libparsec.d.ts build/generated-ts/src/libparsec.d.ts
     install -v -p -m 555 ${libparsec-node}/libparsec.node build/src/libparsec.node
     cp -ra ${native-client-build}/. app
+
+    runHook postConfigure
   '';
 
   # prevent electron download from electron in package.json
@@ -40,27 +52,25 @@ buildNpmPackage {
     ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
   };
 
-  preBuild = ''
-    # Patch '@capacitor-community/electron' not being build
-    rm -rf node_modules/@capacitor-community/electron
-    ln -s ${capacitor-electron}/lib/node_modules/@capacitor-community/electron node_modules/@capacitor-community/electron
-  '';
-
   buildPhase = ''
     runHook preBuild
 
     npx tsc
-    node package.js --mode prod --platform linux --export > electron-builder-config.json
+    node package.cjs --mode prod --platform linux --export > electron-builder-config.json
     npm exec electron-builder -- \
       --linux \
       --dir \
       --config=electron-builder-config.json \
       --config.electronDist=${electron}/libexec/electron \
       --config.electronVersion=${electron.version}
+
+    runHook postBuild
   '';
 
   # Inspired by https://github.com/NixOS/nixpkgs/blob/af105fd3758230351db538ade56e862ac947f849/pkgs/development/tools/electron/wrapper.nix
   installPhase = ''
+    runHook preInstall
+
     mkdir -pv $out/bin
     cp -r dist/linux-unpacked $out/libexec
 
@@ -71,6 +81,8 @@ buildNpmPackage {
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
 
     cp -rva assets/icon.png $icon
+
+    runHook postInstall
   '';
 
   nativeBuildInputs = [
@@ -78,6 +90,7 @@ buildNpmPackage {
     makeWrapper
     patchelf
   ];
+
   dontWrapGApps = true;
 
   passthru.updateScript = nix-update-script {

@@ -44,10 +44,13 @@ buildNpmPackage {
 
   src = "${source}/client";
 
-  npmDepsHash = "sha256-thZK6Wltxy20pH21pfusJGdF38o8qw4GB8Aol0Z0Og8=";
+  npmDepsHash = "sha256-H4CNKPf4xL690hh92fFqjzFCALVPDXd7vUuq1LAmp70=";
 
   makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
 
+  # Patch source to:
+  # - remove call to `electron:install` script since this derivation is only for the native build of the client, the electron app is build in another derivation
+  # - Directly call vite instead of `vite_build_for_native.cjs`, it's only a wrapper around `npm`
   prePatch =
     let
       buildCmd = "vite build --mode=${if isPrerelease then "release-candidate" else "production"}";
@@ -55,7 +58,7 @@ buildNpmPackage {
     ''
       set -e
       sed \
-        -e '/postinstall/d' \
+        -e 's/npm run electron:install && //' \
         -e 's;node ./scripts/vite_build_for_native.cjs;${buildCmd};' \
         -i package.json
     '';
