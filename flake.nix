@@ -38,6 +38,8 @@
         };
       };
 
+      poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
+
       rust-toolchain = fenix.packages.${system}.stable.minimalToolchain;
 
       # A pre-release is denoted if version contain a hyphen.
@@ -54,7 +56,12 @@
         rec {
           parsec-cloud = pkgs.lib.makeScope pkgs.newScope (self: {
             v3 = self.callPackage packages/v3 {
-              inherit system isVersionPrerelease rust-toolchain;
+              inherit
+                system
+                isVersionPrerelease
+                rust-toolchain
+                poetry2nix
+                ;
             };
             inherit (self.v3)
               src
@@ -62,6 +69,7 @@
               native-client-build
               client
               cli
+              server
               ;
           });
 
