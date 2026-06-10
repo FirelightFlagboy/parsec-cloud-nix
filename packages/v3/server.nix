@@ -25,9 +25,6 @@ let
           });
       in
       (lib.attrsets.genAttrs [
-        # Disable slow sentry-sdk test on CI
-        "sentry-sdk"
-        # "oslo-utils"
         # Skip test since it depends more recent trio version than provided by the overwritten anyio
         "fastapi"
         "httpcore"
