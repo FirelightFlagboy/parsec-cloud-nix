@@ -63,15 +63,15 @@ jobs:
         timeout-minutes: 1
 
       - name: Build parsec-cloud client
-        run: nix build -L .#parsec-cloud-${{ matrix.version }}-client
+        run: nix build -L .#parsec-cloud.${{ matrix.version }}.client
         timeout-minutes: ${{ matrix.build-timeout-minutes }}
 
       - name: Build parsec-cloud cli
-        run: nix build -L .#parsec-cloud-${{ matrix.version }}-cli
+        run: nix build -L .#parsec-cloud.${{ matrix.version }}.cli
         timeout-minutes: ${{ matrix.build-timeout-minutes }}
 
       - name: Build parsec-cloud server
-        run: nix build -L .#parsec-cloud-${{ matrix.version }}-server
+        run: nix build -L .#parsec-cloud.${{ matrix.version }}.server
         timeout-minutes: ${{ matrix.build-timeout-minutes }}
 
       - name: Update commit status to success
