@@ -8,17 +8,19 @@ self:
 
 {
   imports = [
-    lib.mkRenamedOptionModule
-    [
-      "programs"
-      "parsec-cloud-v3-client"
-    ]
-    [
-      "programs"
-      "parsec-cloud"
-      "client"
-    ]
+    (lib.mkRenamedOptionModule
+      [
+        "programs"
+        "parsec-cloud-v3-client"
+      ]
+      [
+        "programs"
+        "parsec-cloud"
+        "client"
+      ]
+    )
   ];
+
   options.programs.parsec-cloud =
     let
       inherit (lib)
