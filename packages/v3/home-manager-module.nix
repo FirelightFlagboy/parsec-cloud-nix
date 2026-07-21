@@ -70,10 +70,10 @@ self:
     in
     {
       home.packages =
-        (lib.list.optionals cfgClient.enable [
+        (lib.lists.optionals cfgClient.enable [
           client
           desktopItem
         ])
-        + (lib.list.optionals cfg.cli.enable [ cfg.cli.package ]);
+        + (lib.lists.optionals cfg.cli.enable [ cfg.cli.package ]);
     };
 }
