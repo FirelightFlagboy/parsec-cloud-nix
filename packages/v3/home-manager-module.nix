@@ -74,6 +74,6 @@ self:
           client
           desktopItem
         ])
-        + (lib.lists.optionals cfg.cli.enable [ cfg.cli.package ]);
+        ++ (lib.lists.optionals cfg.cli.enable [ cfg.cli.package ]);
     };
 }
