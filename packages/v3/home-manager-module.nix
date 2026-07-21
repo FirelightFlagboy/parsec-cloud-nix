@@ -6,32 +6,48 @@ self:
   ...
 }:
 
-let
-  clientDefaultPackage = self.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud.v3.client;
-in
 {
-  options.programs.parsec-cloud-v3-client =
+  imports = [
+    (lib.mkRenamedOptionModule
+      [
+        "programs"
+        "parsec-cloud-v3-client"
+      ]
+      [
+        "programs"
+        "parsec-cloud"
+        "client"
+      ]
+    )
+  ];
+
+  options.programs.parsec-cloud =
     let
-      inherit (lib) mkEnableOption mkOption types;
+      inherit (lib)
+        mkEnableOption
+        mkOption
+        types
+        mkPackageOption
+        ;
+      flakePkgs = self.packages.${pkgs.stdenv.hostPlatform.system};
+      parsecPkgs = flakePkgs.parsec-cloud.v3;
     in
     {
-      enable = mkEnableOption "parsec-cloud-v3-client";
-
-      package = mkOption {
-        type = types.package;
-        default = clientDefaultPackage;
-        defaultText = lib.literalExpression ''
-          parsec-cloud.packages.${pkgs.stdenv.hostPlatform.system}.parsec-cloud.v3.client
-        '';
-        description = ''
-          Parsec-cloud client package to use. Defaults to the one provided by the flake.
-        '';
+      client = mkOption {
+        type = types.submodule {
+          options.enable = mkEnableOption "parsec cloud client";
+          options.package = mkPackageOption parsecPkgs "client" {
+            extraDescription = ''
+              Parsec-cloud client package to use. Defaults to the one provided by the flake.
+            '';
+          };
+        };
       };
     };
 
   config =
     let
-      cfgClient = config.programs.parsec-cloud-v3-client;
+      cfgClient = config.programs.parsec-cloud.client;
       client = cfgClient.package;
       clientMajorVersion = lib.versions.major client.version;
       icon = client.icon;
