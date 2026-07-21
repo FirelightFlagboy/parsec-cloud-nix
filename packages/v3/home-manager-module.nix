@@ -46,7 +46,7 @@ self:
 
   config =
     let
-      cfgClient = config.programs.parsec-cloud;
+      cfgClient = config.programs.parsec-cloud.client;
       client = cfgClient.package;
       clientMajorVersion = lib.versions.major client.version;
       icon = client.icon;
