@@ -29,7 +29,7 @@ self:
         types
         mkPackageOption
         ;
-      flakePkgs = self.packages.${pkgs.stdenv.hostPlatform};
+      flakePkgs = self.packages.${pkgs.stdenv.hostPlatform.system};
     in
     {
       client = mkOption {
