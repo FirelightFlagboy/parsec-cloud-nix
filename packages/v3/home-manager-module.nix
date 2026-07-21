@@ -30,12 +30,13 @@ self:
         mkPackageOption
         ;
       flakePkgs = self.packages.${pkgs.stdenv.hostPlatform.system};
+      parsecPkgs = flakePkgs.parsec-cloud.v3;
     in
     {
       client = mkOption {
         type = types.submodule {
           options.enable = mkEnableOption "parsec cloud client";
-          options.package = mkPackageOption flakePkgs "parsec-cloud.v3.client" {
+          options.package = mkPackageOption parsecPkgs "client" {
             extraDescription = ''
               Parsec-cloud client package to use. Defaults to the one provided by the flake.
             '';
