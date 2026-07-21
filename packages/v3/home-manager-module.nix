@@ -31,23 +31,24 @@ self:
         ;
       flakePkgs = self.packages.${pkgs.stdenv.hostPlatform.system};
       parsecPkgs = flakePkgs.parsec-cloud.v3;
-    in
-    {
-      client = mkOption {
-        type = types.submodule {
-          options.enable = mkEnableOption "parsec cloud client";
-          options.package = mkPackageOption parsecPkgs "client" {
-            extraDescription = ''
-              Parsec-cloud client package to use. Defaults to the one provided by the flake.
-            '';
+      mkOptModule =
+        ty:
+        mkOption {
+          type = types.submodule {
+            options.enable = mkEnableOption "parsec cloud ${ty}";
+            options.package = mkPackageOption parsecPkgs "${ty}" { };
           };
         };
-      };
+    in
+    {
+      client = mkOptModule "client";
+      cli = mkOptModule "cli";
     };
 
   config =
     let
-      cfgClient = config.programs.parsec-cloud.client;
+      cfg = config.programs.parsec-cloud;
+      cfgClient = cfg.client;
       client = cfgClient.package;
       clientMajorVersion = lib.versions.major client.version;
       icon = client.icon;
@@ -67,10 +68,12 @@ self:
         mimeTypes = [ "x-scheme-handler/parsec${clientMajorVersion}" ];
       };
     in
-    lib.mkIf cfgClient.enable {
-      home.packages = [
-        client
-        desktopItem
-      ];
+    {
+      home.packages =
+        (lib.lists.optionals cfgClient.enable [
+          client
+          desktopItem
+        ])
+        ++ (lib.lists.optionals cfg.cli.enable [ cfg.cli.package ]);
     };
 }
