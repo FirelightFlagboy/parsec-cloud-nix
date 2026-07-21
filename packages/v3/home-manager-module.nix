@@ -8,7 +8,7 @@ self:
 
 {
   imports = [
-    lib.mkRenamedOption
+    lib.mkRenamedOptionModule
     [
       "programs"
       "parsec-cloud-v3-client"
