@@ -19,7 +19,6 @@ function fail {
 
 trap "fail" ERR
 
-nix run nixpkgs#nix-update -- --flake --use-update-script parsec-cloud.v3.megashark-lib
 nix run nixpkgs#nix-update -- --flake --use-update-script parsec-cloud.v3.native-client-build
 nix run nixpkgs#nix-update -- --flake --use-update-script parsec-cloud.v3.client
 nix run nixpkgs#nix-update -- --flake --use-update-script parsec-cloud.v3.cli
