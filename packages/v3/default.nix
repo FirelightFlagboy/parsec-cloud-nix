@@ -15,6 +15,5 @@ lib.makeScope newScope (self: {
   native-client-build = self.callPackage ./native-build.nix { inherit isVersionPrerelease; };
   client = self.callPackage ./electron-app.nix { };
   cli = self.callPackage ./parsec-cli.nix { };
-  megashark-lib = self.callPackage ./megashark-lib.nix { };
   server = self.callPackage ./server.nix { };
 })

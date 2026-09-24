@@ -13,7 +13,6 @@
   pkg-config,
   prefetch-npm-deps,
   source,
-  megashark-lib,
 }:
 
 let
@@ -44,9 +43,7 @@ buildNpmPackage {
 
   src = "${source}/client";
 
-  npmDepsHash = "sha256-H4CNKPf4xL690hh92fFqjzFCALVPDXd7vUuq1LAmp70=";
-
-  makeCacheWritable = true; # Require for megashark-lib that build during a prepare hook.
+  npmDepsHash = "sha256-4SZuj6OeSgYsb7uwQPjtIJ9/htaG3R7WanBWUB2Nb9U=";
 
   # Patch source to:
   # - remove call to `electron:install` script since this derivation is only for the native build of the client, the electron app is build in another derivation
@@ -62,11 +59,6 @@ buildNpmPackage {
         -e 's;node ./scripts/vite_build_for_native.cjs;${buildCmd};' \
         -i package.json
     '';
-
-  # Need to patch `megashark-lib` dep as it is missing transpiled files
-  preBuild = ''
-    ln -sv ${megashark-lib}/lib/node_modules/megashark-lib/dist node_modules/megashark-lib/dist
-  '';
 
   npmConfigHook = npmConfigHook;
 
