@@ -24,7 +24,7 @@ buildNpmPackage {
 
   src = "${source}/client/electron";
 
-  npmDepsHash = "sha256-nSV8LAW4sRNeQlN4nHj7rv0BLsmSTRCqAjTqtuTLNFw=";
+  npmDepsHash = "sha256-mrtzWScjQ3C7OF3/2mMaJEDXqlxPtrw1TDJNDV8ODP4=";
   makeCacheWritable = true;
 
   # Need to put a console.log in stdout to prevent clutter during json export
