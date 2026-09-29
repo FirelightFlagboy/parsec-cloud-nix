@@ -33,7 +33,7 @@
     cargoLock = {
       lockFile = "${source}/Cargo.lock";
       outputHashes = {
-        "scwsapi-0.8.0" = "sha256-tPn9rClBAJRz0XRNrcLLP/kkD++m3t+h5ovFL3cxDrY=";
+        "scwsapi-0.8.1" = "sha256-0bblcz81lM5booIH2I17SHJEWIY2K/Pgk1hUOgpebVA=";
       };
     };
 
