@@ -2,6 +2,7 @@
   autoPatchelfHook,
   dbus,
   fuse3,
+  installShellFiles,
   lib,
   libgcc,
   makeRustPlatform,
@@ -9,13 +10,19 @@
   openssl,
   pkg-config,
   rust-toolchain,
-  sqlite,
   source,
+  sqlite,
   system,
 }:
 
 let
   version = source.version;
+
+  cliLibPaths = lib.makeLibraryPath [
+    fuse3
+    dbus
+    openssl
+  ];
 in
 (makeRustPlatform {
   cargo = rust-toolchain;
@@ -36,6 +43,7 @@ in
     nativeBuildInputs = [
       pkg-config
       autoPatchelfHook
+      installShellFiles
     ];
     buildInputs = [
       openssl
@@ -48,6 +56,21 @@ in
     buildAndTestSubdir = "cli";
     # Require running the `testbed` server to run the tests (+ access to `parsec-cli`).
     doCheck = false;
+
+    postInstall = ''
+      mkdir -p generated-manpages
+      LD_LIBRARY_PATH=${cliLibPaths} $out/bin/parsec-cli man-page --mode=separate generated-manpages
+      installManPage generated-manpages/*.?
+
+      mkdir -p completions
+      for shell in bash fish zsh; do
+        LD_LIBRARY_PATH=${cliLibPaths} $out/bin/parsec-cli auto-complete $shell > completions/parsec-cli.$shell
+      done
+      installShellCompletion --cmd parsec-cli \
+        --bash completions/parsec-cli.bash \
+        --fish completions/parsec-cli.fish \
+        --zsh completions/parsec-cli.zsh
+    '';
 
     passthru.updateScript = nix-update-script {
       extraArgs = [
