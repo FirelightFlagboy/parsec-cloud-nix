@@ -79,11 +79,16 @@ buildNpmPackage {
   ];
   npmBuildScript = "native:build";
 
+  outputs = [
+    "out"
+    "editics"
+  ];
+
   installPhase = ''
-    mkdir -p $out/app $out/app-editics
-    cp -rva dist/editics $out/app-editics
-    cp -rva dist/* $out/app
-    rm -rf $out/app/editics
+    mkdir -p $out $editics
+    cp -rva dist/editics $editics
+    cp -rva dist/* $out
+    rm -rf $out/editics
   '';
 
   passthru.updateScript = nix-update-script {
