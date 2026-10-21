@@ -80,8 +80,10 @@ buildNpmPackage {
   npmBuildScript = "native:build";
 
   installPhase = ''
-    mkdir -p $out
-    cp -rva dist/{index.html,assets} $out
+    mkdir -p $out/app $out/app-editics
+    cp -rva dist/editics $out/app-editics
+    cp -rva dist/* $out/app
+    rm -rf $out/app/editics
   '';
 
   passthru.updateScript = nix-update-script {

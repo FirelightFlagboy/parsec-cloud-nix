@@ -42,7 +42,8 @@ buildNpmPackage {
     mkdir -pv build/{,generated-ts/}src app
     install -v -p -m 444 ${libparsec-node.typing}/libparsec.d.ts build/generated-ts/src/libparsec.d.ts
     install -v -p -m 555 ${libparsec-node}/libparsec.node build/src/libparsec.node
-    cp -ra ${native-client-build}/. app
+    cp -ra ${native-client-build}/app .
+    cp -ra ${native-client-build}/app-editics .
 
     runHook postConfigure
   '';
