@@ -65,6 +65,8 @@ buildNpmPackage {
       --config.electronDist=${electron}/libexec/electron \
       --config.electronVersion=${electron.version}
 
+    rm -f dist/linux-unpacked/resources/default_app.asar
+
     runHook postBuild
   '';
 
