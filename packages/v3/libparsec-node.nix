@@ -1,16 +1,17 @@
 {
-  makeRustPlatform,
-  source,
-  rust-toolchain,
-  system,
-  openssl,
-  sqlite,
-  fuse3,
   autoPatchelfHook,
   dbus,
-  pkg-config,
-  libgcc,
+  fuse3,
   lib,
+  libgcc,
+  makeRustPlatform,
+  openssl,
+  pkg-config,
+  rust-toolchain,
+  source,
+  sqlite,
+  system,
+  nix-update-script,
 }:
 
 (makeRustPlatform {
@@ -33,6 +34,7 @@
     cargoLock = {
       lockFile = "${source}/Cargo.lock";
       outputHashes = {
+        "fuser-0.18.1" = "sha256-Aei/daoV3th+uAsoICkToXORcWZBZoX3st8wE2rtyig=";
         "scwsapi-0.8.1" = "sha256-0bblcz81lM5booIH2I17SHJEWIY2K/Pgk1hUOgpebVA=";
       };
     };
@@ -62,6 +64,14 @@
       dbus
       libgcc
     ];
+
+    passthru.updateScript = nix-update-script {
+      extraArgs = [
+        "--flake"
+        "--url=${source.src.url}"
+        "--no-src"
+      ];
+    };
 
     meta =
       let

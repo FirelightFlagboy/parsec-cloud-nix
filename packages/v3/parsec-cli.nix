@@ -36,6 +36,7 @@ in
     cargoLock = {
       lockFile = "${source}/Cargo.lock";
       outputHashes = {
+        "fuser-0.18.1" = "sha256-Aei/daoV3th+uAsoICkToXORcWZBZoX3st8wE2rtyig=";
         "scwsapi-0.8.1" = "sha256-0bblcz81lM5booIH2I17SHJEWIY2K/Pgk1hUOgpebVA=";
       };
     };

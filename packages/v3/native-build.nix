@@ -43,7 +43,7 @@ buildNpmPackage {
 
   src = "${source}/client";
 
-  npmDepsHash = "sha256-suQ7S+vcTER3VOAc6+OoMt5J2OCOh99+CvwG2HXVNVE=";
+  npmDepsHash = "sha256-BruqlWXyq8KlPpKdnxAfELENlEWKd6H815LLZtA6o68=";
 
   # Patch source to:
   # - remove call to `electron:install` script since this derivation is only for the native build of the client, the electron app is build in another derivation
@@ -79,9 +79,24 @@ buildNpmPackage {
   ];
   npmBuildScript = "native:build";
 
+  outputs = [
+    "out"
+    "editics"
+  ];
+
   installPhase = ''
-    mkdir -p $out
-    cp -rva dist/{index.html,assets} $out
+    mkdir -p $out $editics
+
+    cp -rva dist/editics $editics
+    # Remove uncompressed files having a compressed variant
+    for file in $(find $editics -type f -name '*.br'); do
+      uncompressed_file="''${file/%.br/}"
+      if [ -f "$uncompressed_file" ]; then
+        echo $uncompressed_file
+      fi
+    done | xargs rm -fv
+
+    (cd dist && find . -type f -not -path './editics/*' -exec cp -av --parents --target-directory="$out" '{}' '+')
   '';
 
   passthru.updateScript = nix-update-script {
