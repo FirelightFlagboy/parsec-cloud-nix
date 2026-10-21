@@ -43,7 +43,7 @@ buildNpmPackage {
 
   src = "${source}/client";
 
-  npmDepsHash = "sha256-suQ7S+vcTER3VOAc6+OoMt5J2OCOh99+CvwG2HXVNVE=";
+  npmDepsHash = "sha256-0zc4ii2lCENzDn/3JQVvZRAlp0NXCTV0Q85WC0JRZmM=";
 
   # Patch source to:
   # - remove call to `electron:install` script since this derivation is only for the native build of the client, the electron app is build in another derivation
