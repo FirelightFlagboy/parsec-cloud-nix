@@ -7,7 +7,7 @@
   lib,
   makeSetupHook,
   nix-update-script,
-  nodejs_22,
+  nodejs_24,
   pango,
   pixman,
   pkg-config,
@@ -17,7 +17,7 @@
 
 let
   version = source.version;
-  nodejs = nodejs_22;
+  nodejs = nodejs_24;
   isPrerelease = isVersionPrerelease source.version;
   # TODO: Should be fixed once https://github.com/NixOS/nixpkgs/pull/381409 is merged.
   npmConfigHook = makeSetupHook {
