@@ -11,9 +11,9 @@ stdenvNoCC.mkDerivation rec {
     owner = "Scille";
     repo = "parsec-cloud";
     # tag = "v${version}";
-    rev = "01bb7ac383597b95cabbed5370f6445070b12c27";
+    rev = "cbbe28f56b7a6d08af46c96c8afd9853e8dec042";
     # `nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/${commit_rev}.tar.gz | xargs nix hash convert --from nix32 --hash-algo sha256 `
-    hash = "sha256-dQ6JndXQqfxS5eRuqfeGREJ0oIVwaQaJkFmePVg+8t0=";
+    hash = "sha256-BAVCzf1p5sy5NUkuDFJGdwy7iy5z626RYI1wYVO440M=";
   };
   patches = [
   ];
