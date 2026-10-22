@@ -86,9 +86,17 @@ buildNpmPackage {
 
   installPhase = ''
     mkdir -p $out $editics
+
     cp -rva dist/editics $editics
-    cp -rva dist/* $out
-    rm -rf $out/editics
+    # Remove uncompressed files having a compressed variant
+    for file in $(find $editics -type f -name '*.br'); do
+      uncompressed_file="''${file/%.br/}"
+      if [ -f "$uncompressed_file" ]; then
+        echo $uncompressed_file
+      fi
+    done | xargs rm -fv
+
+    (cd dist && find . -type f -not -path './editics/*' -exec cp -av --parents --target-directory="$out" '{}' '+')
   '';
 
   passthru.updateScript = nix-update-script {
