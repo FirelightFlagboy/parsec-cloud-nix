@@ -24,7 +24,7 @@ buildNpmPackage {
 
   src = "${source}/client/electron";
 
-  npmDepsHash = "sha256-mrtzWScjQ3C7OF3/2mMaJEDXqlxPtrw1TDJNDV8ODP4=";
+  npmDepsHash = "sha256-4BCs9c1Xc8QAvxsuAOXnN87727iPwLQ6lnYs/3eW+Hw=";
   makeCacheWritable = true;
 
   # Need to put a console.log in stdout to prevent clutter during json export
@@ -39,10 +39,11 @@ buildNpmPackage {
   configurePhase = ''
     runHook preConfigure
 
-    mkdir -pv build/{,generated-ts/}src app
+    mkdir -pv build/{,generated-ts/}src app{,-editics}
     install -v -p -m 444 ${libparsec-node.typing}/libparsec.d.ts build/generated-ts/src/libparsec.d.ts
     install -v -p -m 555 ${libparsec-node}/libparsec.node build/src/libparsec.node
     cp -ra ${native-client-build}/. app
+    cp -ra ${native-client-build.editics}/. app-editics
 
     runHook postConfigure
   '';
@@ -63,6 +64,8 @@ buildNpmPackage {
       --config=electron-builder-config.json \
       --config.electronDist=${electron}/libexec/electron \
       --config.electronVersion=${electron.version}
+
+    rm -f dist/linux-unpacked/resources/default_app.asar
 
     runHook postBuild
   '';
