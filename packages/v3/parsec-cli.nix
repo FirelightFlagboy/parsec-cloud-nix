@@ -1,17 +1,15 @@
 {
-  autoPatchelfHook,
+  callPackage,
   dbus,
   fuse3,
   installShellFiles,
   lib,
-  libgcc,
+  libgit2,
   makeRustPlatform,
   nix-update-script,
   openssl,
-  pkg-config,
   rust-toolchain,
   source,
-  sqlite,
   system,
 }:
 
@@ -23,6 +21,7 @@ let
     dbus
     openssl
   ];
+  rustUtils = callPackage ./rust-utils.nix { inherit source; };
 in
 (makeRustPlatform {
   cargo = rust-toolchain;
@@ -33,25 +32,14 @@ in
     src = source;
     pname = "parsec-cli";
 
-    cargoLock = {
-      lockFile = "${source}/Cargo.lock";
-      outputHashes = {
-        "fuser-0.18.1" = "sha256-Aei/daoV3th+uAsoICkToXORcWZBZoX3st8wE2rtyig=";
-        "scwsapi-0.8.1" = "sha256-0bblcz81lM5booIH2I17SHJEWIY2K/Pgk1hUOgpebVA=";
-      };
-    };
+    inherit (rustUtils) cargoLock;
 
-    nativeBuildInputs = [
-      pkg-config
-      autoPatchelfHook
+    nativeBuildInputs = rustUtils.nativeBuildInputs ++ [
       installShellFiles
     ];
-    buildInputs = [
-      openssl
-      sqlite
-      dbus
-      fuse3.dev
-      libgcc
+
+    buildInputs = rustUtils.buildInputs ++ [
+      libgit2.dev
     ];
 
     buildAndTestSubdir = "cli";
@@ -68,9 +56,9 @@ in
         LD_LIBRARY_PATH=${cliLibPaths} $out/bin/parsec-cli auto-complete $shell > completions/parsec-cli.$shell
       done
       installShellCompletion --cmd parsec-cli \
-        --bash completions/parsec-cli.bash \
-        --fish completions/parsec-cli.fish \
-        --zsh completions/parsec-cli.zsh
+      --bash completions/parsec-cli.bash \
+      --fish completions/parsec-cli.fish \
+      --zsh completions/parsec-cli.zsh
     '';
 
     passthru.updateScript = nix-update-script {
