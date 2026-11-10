@@ -1,19 +1,16 @@
 {
-  autoPatchelfHook,
-  dbus,
-  fuse3,
+  callPackage,
   lib,
-  libgcc,
   makeRustPlatform,
-  openssl,
-  pkg-config,
+  nix-update-script,
   rust-toolchain,
   source,
-  sqlite,
   system,
-  nix-update-script,
 }:
 
+let
+  rustUtils = callPackage ./rust-utils.nix { inherit source; };
+in
 (makeRustPlatform {
   cargo = rust-toolchain;
   rustc = rust-toolchain;
@@ -27,17 +24,11 @@
       "typing"
     ];
 
+    inherit (rustUtils) cargoLock nativeBuildInputs buildInputs;
+
     # Crate to build
     buildAndTestSubdir = "bindings/electron";
     cargoBuildFeatures = [ ];
-
-    cargoLock = {
-      lockFile = "${source}/Cargo.lock";
-      outputHashes = {
-        "fuser-0.18.1" = "sha256-Aei/daoV3th+uAsoICkToXORcWZBZoX3st8wE2rtyig=";
-        "scwsapi-0.8.1" = "sha256-0bblcz81lM5booIH2I17SHJEWIY2K/Pgk1hUOgpebVA=";
-      };
-    };
 
     doCheck = false;
 
@@ -52,18 +43,6 @@
         install -v --directory $typing
         install -v -m 444 -p $src/${typescript_def_path} $typing/libparsec.d.ts
       '';
-
-    nativeBuildInputs = [
-      pkg-config
-      autoPatchelfHook
-    ];
-    buildInputs = [
-      openssl
-      sqlite
-      fuse3.dev
-      dbus
-      libgcc
-    ];
 
     passthru.updateScript = nix-update-script {
       extraArgs = [
